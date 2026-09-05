@@ -1,0 +1,10 @@
+== Fault-injection test: /api/memory/confidential ==
+[PASS] title/content as wrong JSON types (number/bool instead of string) -> HTTP 400
+[PASS] syntactically malformed JSON body -> HTTP 400
+[PASS] missing required field ('content' absent) -> HTTP 400
+[PASS] oversized content (10050 chars, limit is 10000) -> HTTP 400
+[PASS] control characters inside content (\n, \t) accepted as data -> HTTP 201
+[PASS] empty request body -> HTTP 400
+[PASS] process still alive and responsive after all 6 malformed requests -> HTTP 200
+=== Summary ===
+Checks: 7 total, 0 crashes, 0 hangs

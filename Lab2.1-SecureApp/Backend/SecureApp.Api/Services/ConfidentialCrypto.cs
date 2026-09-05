@@ -28,14 +28,26 @@ public class ConfidentialCrypto(IConfiguration configuration)
         var cipherBytes = new byte[plainBytes.Length];
         var tag = new byte[TagSize];
 
-        using var aes = new AesGcm(_key, TagSize);
-        aes.Encrypt(nonce, plainBytes, cipherBytes, tag);
+        try
+        {
+            using var aes = new AesGcm(_key, TagSize);
+            aes.Encrypt(nonce, plainBytes, cipherBytes, tag);
 
-        var result = new byte[NonceSize + cipherBytes.Length + TagSize];
-        Buffer.BlockCopy(nonce, 0, result, 0, NonceSize);
-        Buffer.BlockCopy(cipherBytes, 0, result, NonceSize, cipherBytes.Length);
-        Buffer.BlockCopy(tag, 0, result, NonceSize + cipherBytes.Length, TagSize);
-        return result;
+            var result = new byte[NonceSize + cipherBytes.Length + TagSize];
+            Buffer.BlockCopy(nonce, 0, result, 0, NonceSize);
+            Buffer.BlockCopy(cipherBytes, 0, result, NonceSize, cipherBytes.Length);
+            Buffer.BlockCopy(tag, 0, result, NonceSize + cipherBytes.Length, TagSize);
+            return result;
+        }
+        finally
+        {
+            // Best-effort only: this scrubs our own intermediate UTF-8 buffer,
+            // but the caller's original `string plaintext` is immutable and
+            // may already have additional copies elsewhere (e.g. the JSON
+            // deserializer's internal buffers) that this method cannot reach
+            // or clear -- see the Lab 3.1 report's code-security analysis.
+            Array.Clear(plainBytes);
+        }
     }
 
     public string Decrypt(byte[] blob)
@@ -47,6 +59,15 @@ public class ConfidentialCrypto(IConfiguration configuration)
 
         using var aes = new AesGcm(_key, TagSize);
         aes.Decrypt(nonce, cipherBytes, tag, plainBytes);
-        return Encoding.UTF8.GetString(plainBytes);
+        try
+        {
+            return Encoding.UTF8.GetString(plainBytes);
+        }
+        finally
+        {
+            // The returned System.String copy of the plaintext cannot be
+            // scrubbed (strings are immutable in .NET), only this byte buffer.
+            Array.Clear(plainBytes);
+        }
     }
 }

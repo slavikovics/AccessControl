@@ -21,6 +21,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddSingleton<ConfidentialCrypto>();
 builder.Services.AddSingleton<TokenService>();
 builder.Services.AddSingleton<LoginAttemptTracker>();
+builder.Services.AddSingleton<InMemoryRecordStore>();
 
 builder.Services.AddCors(options =>
 {

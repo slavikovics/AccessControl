@@ -9,6 +9,11 @@ obj/
 node_modules/
 dist/
 
+# Lab3.1: raw process memory dumps hold live secrets (JWT/encryption keys,
+# session tokens) -- never committed, only the extracted text findings are.
+*.dmp
+*.gcdump
+
 # LaTeX build artifacts (lab reports keep only the sources and the built PDF)
 *.aux
 *.fdb_latexmk

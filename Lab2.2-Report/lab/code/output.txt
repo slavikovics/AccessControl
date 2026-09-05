@@ -1,0 +1,36 @@
+== Phase 1: Reconnaissance -- server banner and resource discovery ==
+[FINDING] Server banner disclosed: 'Server: Kestrel' (aids an attacker in picking known CVEs for the stack)
+[FINDING] OpenAPI schema publicly exposed at /openapi/v1.json (HTTP 200) -- discloses full API surface: "/api/auth/login" "/api/auth/logout" "/api/auth/me" "/api/auth/register" "/api/confidential" "/api/confidential/{id}" "/api/public" "/api/public/{id}" 
+[PASS]    /robots.txt not exposed (HTTP 404)
+[PASS]    /.env not exposed (HTTP 404)
+[PASS]    /.git/config not exposed (HTTP 404)
+[PASS]    /.git/HEAD not exposed (HTTP 404)
+[PASS]    /swagger not exposed (HTTP 404)
+[PASS]    /swagger/index.html not exposed (HTTP 404)
+[PASS]    /.well-known/security.txt not exposed (HTTP 404)
+[PASS]    /backup.zip not exposed (HTTP 404)
+[PASS]    /web.config not exposed (HTTP 404)
+[PASS]    TRACE method not enabled (HTTP 404)
+== Phase 2: Network / transport security headers ==
+[PASS]    X-Content-Type-Options header present
+[PASS]    X-Frame-Options header present
+[PASS]    Referrer-Policy header present
+[FINDING] Strict-Transport-Security header missing
+[FINDING] Content-Security-Policy header missing
+== Phase 3: Injection testing (SQL injection, per OWASP Testing Guide WSTG-INPV) ==
+[INFO]    Created canary record #1 to detect a successful injection (e.g. a dropped/truncated table)
+[PASS]    Classic OR-based SQLi in login.username did not authenticate ({"message":"Invalid username or password."})
+[PASS]    Canary record #1 survives DROP TABLE / UNION SELECT payloads in the search parameter -- EF Core parameterization holds
+== Phase 4: Stored XSS / output-encoding testing (OWASP WSTG-INPV-01/02) ==
+[FINDING] API stores and echoes an XSS payload verbatim, with no server-side sanitization or output encoding (not currently exploitable through the shipped React frontend, which never uses innerHTML/dangerouslySetInnerHTML -- see source review in the report -- but is a latent risk for any other client)
+== Phase 5: Authentication and session security ==
+[PASS]    Forged alg:none JWT rejected (HTTP 401) -- no JWT algorithm-confusion vulnerability
+[PASS]    Login endpoint rate-limited after 5 failures (HTTP 429)
+[FINDING] Registration endpoint has NO rate limiting (8/8 unthrottled: 409 409 409 409 409 409 409 409 ) -- allows unlimited username-enumeration probes, unlike the login endpoint
+[PASS]    Session cookie carries HttpOnly; Secure; SameSite=Strict
+== Phase 6: Input validation / resource-exhaustion boundary ==
+[PASS]    Oversized content (10050 chars) rejected by validation (HTTP 400)
+== Phase 7: Confidentiality -- raw storage inspection ==
+[PASS]    Confidential marker not found in plain text anywhere in the raw database file (record #1)
+=== Summary ===
+Checks: 26 total, 6 findings

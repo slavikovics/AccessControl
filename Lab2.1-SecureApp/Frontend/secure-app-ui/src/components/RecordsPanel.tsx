@@ -165,13 +165,20 @@ export default function RecordsPanel({ kind, label, description }: Props) {
         </Table>
       </TableContainer>
 
-      <Chip
-        size="small"
-        sx={{ mt: 2 }}
-        label={kind === "confidential" ? "Encrypted at rest (AES-256-GCM)" : "Stored as plain text"}
-        color={kind === "confidential" ? "warning" : "default"}
-        variant="outlined"
-      />
+      <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
+        <Chip
+          size="small"
+          label={kind.endsWith("confidential") ? "Encrypted (AES-256-GCM)" : "Stored as plain text"}
+          color={kind.endsWith("confidential") ? "warning" : "default"}
+          variant="outlined"
+        />
+        <Chip
+          size="small"
+          label={kind.startsWith("memory-") ? "RAM only — not persisted, lost on restart" : "Persisted in SQLite"}
+          color={kind.startsWith("memory-") ? "error" : "default"}
+          variant="outlined"
+        />
+      </Stack>
 
       <RecordDialog open={dialogOpen} record={editing} onClose={() => setDialogOpen(false)} onSave={handleSave} />
     </Box>

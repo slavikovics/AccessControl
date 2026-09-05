@@ -41,9 +41,11 @@ export default function DashboardPage() {
       </AppBar>
 
       <Container maxWidth="md" sx={{ py: 4 }}>
-        <Tabs value={tab} onChange={handleChange} sx={{ mb: 3 }}>
+        <Tabs value={tab} onChange={handleChange} sx={{ mb: 3 }} variant="scrollable" scrollButtons="auto">
           <Tab label="Confidential data" />
           <Tab label="Public data" />
+          <Tab label="In-memory confidential" />
+          <Tab label="In-memory public" />
         </Tabs>
 
         {tab === 0 && (
@@ -58,6 +60,20 @@ export default function DashboardPage() {
             kind="public"
             label="Public data"
             description="Non-confidential notes, still scoped to your account."
+          />
+        )}
+        {tab === 2 && (
+          <RecordsPanel
+            kind="memory-confidential"
+            label="In-memory confidential data"
+            description="Lab 3.1: held only in the server process's RAM (never written to disk), encrypted immediately on write. Lost on restart."
+          />
+        )}
+        {tab === 3 && (
+          <RecordsPanel
+            kind="memory-public"
+            label="In-memory public data"
+            description="Lab 3.1: held only in the server process's RAM, in plain text. Lost on restart."
           />
         )}
       </Container>

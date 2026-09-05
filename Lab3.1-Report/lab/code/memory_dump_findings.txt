@@ -1,0 +1,15 @@
+== Dump 1: after CREATE (confidential id=2, public id=2) ==
+CONFIDENTIAL-PLAINTEXT-MARKER-AXQ7391 (confidential content, V1): 3 occurrence(s)
+PUBLIC-PLAINTEXT-MARKER-BXQ7391 (public content, V1):          3 occurrence(s)
+
+== Dump 2: after UPDATE (V1 -> V2 on both records) ==
+CONFIDENTIAL-PLAINTEXT-MARKER-AXQ7391 (old V1, logically replaced): 3 occurrence(s)
+CONFIDENTIAL-PLAINTEXT-MARKER-V2-CYT8402 (new V2, current):        3 occurrence(s)
+PUBLIC-PLAINTEXT-MARKER-BXQ7391 (old V1, logically replaced):      3 occurrence(s)
+PUBLIC-PLAINTEXT-MARKER-V2-DYT8402 (new V2, current):              3 occurrence(s)
+
+== Dump 3: after DELETE of both records + forced full GC (dotnet-gcdump collect) ==
+CONFIDENTIAL-PLAINTEXT-MARKER-AXQ7391 (V1, deleted 2 versions ago): 3 occurrence(s)
+CONFIDENTIAL-PLAINTEXT-MARKER-V2-CYT8402 (V2, deleted):             3 occurrence(s)
+PUBLIC-PLAINTEXT-MARKER-BXQ7391 (V1, deleted 2 versions ago):       3 occurrence(s)
+PUBLIC-PLAINTEXT-MARKER-V2-DYT8402 (V2, deleted):                   3 occurrence(s)
