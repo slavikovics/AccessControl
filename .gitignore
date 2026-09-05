@@ -1,3 +1,11 @@
 .idea/
 bin/
 obj/
+
+# LaTeX build artifacts (lab reports keep only the sources and the built PDF)
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+_minted-*/

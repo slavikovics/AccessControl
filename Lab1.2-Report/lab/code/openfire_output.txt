@@ -1,0 +1,37 @@
+== Step 1: Start a bare Linux container to install Openfire into ==
+[OK] Run base container  $ docker run -d --name openfire_lab -p 9090:9090 -p 9091:9091 -p 5222:5222 -p 5269:5269 ubuntu:24.04 sleep infinity
+== Step 2: Install the Java runtime Openfire needs ==
+[OK] Refresh package index
+[OK] Install default-jre-headless, wget, python3-venv
+== Step 3: Download and install the official Openfire package ==
+[OK] Download the Openfire .deb package  $ wget openfire_5.1.2_all.deb
+[OK] Install the Openfire package  $ dpkg -i /tmp/openfire.deb
+== Step 4: Install a small Python XMPP client for the later protocol-level checks ==
+[OK] Create a virtualenv for test tooling
+[OK] Install slixmpp into the virtualenv
+== Step 5: Provision Openfire unattended (autosetup) with the admin and user accounts ==
+[OK] Copy the autosetup configuration into the container
+[OK] Fix ownership of the configuration file
+[OK] Fix permissions of the configuration file
+== Step 6: Start Openfire and wait for the autosetup run to complete ==
+[OK] Start the Openfire service  $ /etc/init.d/openfire start
+[OK] Admin Console is up and autosetup has completed
+== Step 7: Create the 'labroom' room and grant 'iuser' member rights in it ==
+[OK] Copy the room setup script into the container
+[OK] Configure the chat room's access control
+== Step 8: Verify who can log into the Admin Console ==
+[ALLOWED] admin                    AdminConsoleLogin /index.jsp
+[DENIED ] iuser                    AdminConsoleLogin /index.jsp
+[DENIED ] admin (wrong password)   AdminConsoleLogin /index.jsp
+== Step 9: Verify who can speak in 'labroom' (moderated: only members and the owner get voice) ==
+[OK] Copy the room probe script into the container
+[ALLOWED] admin                    SpeakInRoom      labroom@conference.localhost
+[ALLOWED] iuser                    SpeakInRoom      labroom@conference.localhost
+[DENIED ] guest (anonymous)        SpeakInRoom      labroom@conference.localhost
+[DENIED ] attacker (unknown account) SpeakInRoom      labroom@conference.localhost
+== Step 10: Remove Openfire and every file it created ==
+[OK] Remove the container  $ docker rm -f openfire_lab
+=== Summary ===
+Operations: 16 total, 0 failed
+  AdminConsoleLogin allowed     1 / 3     denied 2
+  SpeakInRoom    allowed     2 / 4     denied 2

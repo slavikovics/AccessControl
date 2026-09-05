@@ -1,0 +1,44 @@
+== Step 1: Pull the MongoDB server image ==
+[OK] Pull MongoDB image  $ docker pull mongo:7
+== Step 2: Create a persistent data volume ==
+[OK] Create data volume  $ docker volume create mongo_lab_data
+== Step 3: Start MongoDB (bootstrap mode, no authentication yet) ==
+[OK] Run MongoDB container  $ docker run -d --name mongo_lab -p 27017:27017 -v mongo_lab_data:/data/db mongo:7
+[OK] MongoDB accepted a connection and is ready
+== Step 4: Create the administrator account through the localhost exception ==
+[OK] Create admin user (role 'root' on 'admin')  $ docker exec mongo_lab mongosh --quiet --eval db.getSiblingDB('admin').createUser({user:'admin',pwd:'AdminP@ss1',roles:[{role:'root',db:'admin'}]})
+== Step 5: Restart MongoDB with authorization enforced ==
+[OK] Stop the bootstrap container  $ docker rm -f mongo_lab
+[OK] Run MongoDB container with --auth  $ docker run -d --name mongo_lab -p 27017:27017 -v mongo_lab_data:/data/db mongo:7 --auth
+[OK] MongoDB is back up with authorization enforced
+== Step 6: Seed the application database with public and private data ==
+[OK] Insert a document into public_notes
+[OK] Insert a document into private_notes
+== Step 7: Create 'labuser' - readWrite on 'labdb' only ==
+[OK] Create user 'labuser' (role readWrite on labdb)
+== Step 8: Create 'labguest' - read-only on 'labdb.public_notes' only ==
+[OK] Create role 'guestReader' (find on labdb.public_notes only)
+[OK] Create user 'labguest' (role guestReader)
+== Step 9: Verify the administrator's privileges ==
+[ALLOWED] admin      ListDatabases  admin (cluster-wide)
+== Step 10: Verify 'labuser' has full rights inside 'labdb' only ==
+[ALLOWED] labuser    Read           labdb.public_notes
+[ALLOWED] labuser    Write          labdb.private_notes
+[DENIED ] labuser    CreateUser     labdb (admin-only op)
+[DENIED ] labuser    Read           otherdb.secrets (no role granted)
+== Step 11: Verify 'labguest' can only read 'public_notes' ==
+[ALLOWED] labguest   Read           labdb.public_notes
+[DENIED ] labguest   Read           labdb.private_notes
+[DENIED ] labguest   Write          labdb.public_notes
+== Step 12: Verify that an unauthenticated client is rejected outright ==
+[DENIED ] (none)     Write          labdb.public_notes (no credentials)
+== Step 13: Remove MongoDB, its data volume and its image ==
+[OK] Remove the container  $ docker rm -f mongo_lab
+[OK] Remove the data volume  $ docker volume rm mongo_lab_data
+[OK] Remove the MongoDB image  $ docker rmi mongo:7
+=== Summary ===
+Operations: 16 total, 0 failed
+  CreateUser     allowed     0 / 1     denied 1
+  ListDatabases  allowed     1 / 1     denied 0
+  Read           allowed     2 / 4     denied 2
+  Write          allowed     1 / 3     denied 2

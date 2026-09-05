@@ -1,0 +1,67 @@
+import asyncio
+import ssl
+import sys
+import slixmpp
+from slixmpp.exceptions import IqError, IqTimeout
+
+DOMAIN = "{{DOMAIN}}"
+ROOM = "{{ROOM_JID}}"
+ADMIN_JID = f"{{ADMIN_USER}}@{DOMAIN}/setup"
+ADMIN_PW = "{{ADMIN_PASSWORD}}"
+USER_JID = "{{APP_USER}}@" + DOMAIN
+
+
+class SetupBot(slixmpp.ClientXMPP):
+    def __init__(self):
+        super().__init__(ADMIN_JID, ADMIN_PW)
+        self.ssl_context.check_hostname = False
+        self.ssl_context.verify_mode = ssl.CERT_NONE
+        self.register_plugin("xep_0045")  # Multi-User Chat
+        self.add_event_handler("session_start", self.start)
+        self.result = None
+
+    async def start(self, event):
+        try:
+            self.send_presence()
+            await self.get_roster()
+
+            # Admin creates the room ("subsystem") and becomes its owner.
+            await self.plugin["xep_0045"].join_muc_wait(ROOM, "{{ADMIN_USER}}")
+
+            # Moderated + members-only=false: registered members get voice (can post),
+            # everyone else (including anonymous guests) joins as a mute "visitor".
+            form = await self.plugin["xep_0045"].get_room_config(ROOM)
+            form.set_values({
+                "muc#roomconfig_roomname": "Lab Room",
+                "muc#roomconfig_moderatedroom": True,
+                "muc#roomconfig_publicroom": True,
+                "muc#roomconfig_persistentroom": True,
+                "muc#roomconfig_membersonly": False,
+                "muc#roomconfig_whois": "moderators",
+            })
+            await self.plugin["xep_0045"].set_room_config(ROOM, form)
+
+            # Admin grants the "user" identity full (voice) rights in this subsystem.
+            await self.plugin["xep_0045"].set_affiliation(ROOM, affiliation="member", jid=USER_JID)
+
+            self.result = "OK"
+        except (IqError, IqTimeout) as e:
+            self.result = f"FAIL {e}"
+        except Exception as e:
+            self.result = f"FAIL {type(e).__name__}: {e}"
+        finally:
+            self.disconnect()
+
+
+async def main():
+    bot = SetupBot()
+    bot.connect(host="127.0.0.1", port={{CLIENT_PORT}})
+    try:
+        await asyncio.wait_for(bot.disconnected, timeout=20)
+    except asyncio.TimeoutError:
+        bot.result = "FAIL timeout"
+    print(bot.result)
+    sys.exit(0 if bot.result == "OK" else 1)
+
+
+asyncio.run(main())

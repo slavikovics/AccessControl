@@ -1,0 +1,66 @@
+import asyncio
+import ssl
+import sys
+import slixmpp
+
+DOMAIN = "{{DOMAIN}}"
+ROOM = "{{ROOM_JID}}"
+
+
+class ProbeBot(slixmpp.ClientXMPP):
+    def __init__(self, jid, password, nick):
+        super().__init__(jid, password)
+        self.ssl_context.check_hostname = False
+        self.ssl_context.verify_mode = ssl.CERT_NONE
+        self.register_plugin("xep_0045")
+        self.nick = nick
+        self.result = "DENIED (no reply)"
+        self.add_event_handler("session_start", self.start)
+        self.add_event_handler("groupchat_message", self.on_groupchat_message)
+        self.add_event_handler("message_error", self.on_message_error)
+
+    async def start(self, event):
+        self.send_presence()
+        await self.get_roster()
+        try:
+            await self.plugin["xep_0045"].join_muc_wait(ROOM, self.nick)
+        except Exception as e:
+            self.result = f"JOIN DENIED: {e}"
+            self.disconnect()
+            return
+
+        self.send_message(mto=ROOM, mbody="probe message", mtype="groupchat")
+        await asyncio.sleep(3)
+        self.disconnect()
+
+    def on_groupchat_message(self, msg):
+        if msg["body"] == "probe message" and msg["mucnick"] == self.nick:
+            self.result = "ALLOWED"
+
+    def on_message_error(self, msg):
+        self.result = f"DENIED ({msg['error']['condition']})"
+
+
+async def run(jid, password, nick):
+    bot = ProbeBot(jid, password, nick)
+    bot.connect(host="127.0.0.1", port={{CLIENT_PORT}})
+    try:
+        await asyncio.wait_for(bot.disconnected, timeout=15)
+    except asyncio.TimeoutError:
+        return "TIMEOUT " + bot.result
+    return bot.result
+
+
+if __name__ == "__main__":
+    anonymous = "--anonymous" in sys.argv
+    args = [a for a in sys.argv[1:] if a != "--anonymous"]
+    if anonymous:
+        jid = DOMAIN
+        password = ""
+        nick = args[0] if args else "guest"
+    else:
+        jid = args[0]
+        password = args[1] if len(args) > 1 else ""
+        nick = args[2] if len(args) > 2 else jid.split("@")[0]
+    result = asyncio.run(run(jid, password, nick))
+    print(f"RESULT: {result}")

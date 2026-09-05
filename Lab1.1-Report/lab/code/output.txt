@@ -1,0 +1,46 @@
+== Step 1: Create groups group_iit1, group_iit2 ==
+[OK] Create group 'group_iit1'  $ groupadd group_iit1
+[OK] Create group 'group_iit2'  $ groupadd group_iit2
+
+== Step 2: Create users iit11, iit12 in group_iit1 ==
+[OK] Create user 'iit11'  $ useradd -m -G group_iit1 iit11
+[OK] Create user 'iit12'  $ useradd -m -G group_iit1 iit12
+...
+== Step 4: Grant iit21 administrative privileges ==
+[OK] Grant admin privileges to 'iit21' (group 'sudo')  $ usermod -aG sudo iit21
+
+== Step 7: Create folders pzs11..pzs15 (owner/group/other/all/admin, rwx) ==
+[OK] Create directory '/acl_lab/pzs/pzs11'  $ mkdir -p /acl_lab/pzs/pzs11
+[OK] Apply access rule (owner, rwx) on '/acl_lab/pzs/pzs11'  $ chmod 700 /acl_lab/pzs/pzs11
+[OK] Create directory '/acl_lab/pzs/pzs12'  $ mkdir -p /acl_lab/pzs/pzs12
+[OK] Clear classic bits on '/acl_lab/pzs/pzs12'  $ chmod 000 /acl_lab/pzs/pzs12
+[OK] Apply access rule (group 'group_iit1', rwx) on '/acl_lab/pzs/pzs12'  $ setfacl -m g:group_iit1:rwx /acl_lab/pzs/pzs12
+...
+
+-- Проверка каталога pzs12 (доступ только для группы group_iit1 через ACL) --
+[ALLOWED] iit11  ListDirectory  /acl_lab/pzs/pzs12
+[ALLOWED] iit12  ListDirectory  /acl_lab/pzs/pzs12
+[DENIED ] iit21  ListDirectory  /acl_lab/pzs/pzs12
+[DENIED ] iit22  ListDirectory  /acl_lab/pzs/pzs12
+[DENIED ] iit3   ListDirectory  /acl_lab/pzs/pzs12
+[ALLOWED] root   ListDirectory  /acl_lab/pzs/pzs12
+
+-- Файл pzs14/file21: владелец iit11, ACE группы group_iit1 = r-- --
+[OK] Apply access rule (group 'group_iit1', r--) on '/acl_lab/pzs/pzs14/file21'  $ setfacl -m g:group_iit1:r-- /acl_lab/pzs/pzs14/file21
+[DENIED ] iit11  Read           /acl_lab/pzs/pzs14/file21
+[ALLOWED] iit12  Read           /acl_lab/pzs/pzs14/file21
+[DENIED ] iit21  Read           /acl_lab/pzs/pzs14/file21
+
+== Step 15: Run every filex5 script as iit11, then try to stop it as every identity ==
+[FAIL] Start '/acl_lab/pzs/pzs11/file15' as 'iit11'  -sh: 1: /acl_lab/pzs/pzs11/file15: Permission denied
+[FAIL] Start '/acl_lab/pzs/pzs14/file45' as 'iit11'  -sh: 1: /acl_lab/pzs/pzs14/file45: Permission denied
+...
+
+=== Summary ===
+Operations: 594 total, 20 failed
+  Read           allowed   181 / 600   denied 419
+  Write          allowed   181 / 600   denied 419
+  Execute        allowed    94 / 600   denied 506
+  ListDirectory  allowed    23 / 36    denied 13
+  CreateEntry    allowed    18 / 36    denied 18
+  DeleteEntry    allowed    18 / 36    denied 18
