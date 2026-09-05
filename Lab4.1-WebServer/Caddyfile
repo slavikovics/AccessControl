@@ -1,0 +1,41 @@
+# Caddyfile for Lab 4.1's test page.
+#
+# {$DOMAIN} is read from the environment (see caddy.env.example) so the
+# actual domain name is never hardcoded/committed. Caddy automatically
+# requests and renews a Let's Encrypt certificate for it and redirects
+# plain HTTP to HTTPS -- no certbot, no cron job, no extra config needed.
+
+{$DOMAIN} {
+	root * /var/www/lab4/dist
+	file_server
+	encode gzip
+
+	# Structured JSON access log -- one line of JSON per request, easy to
+	# filter/aggregate with jq for the Lab 4.1 report (client IP, method,
+	# path, status, user agent, response time are all top-level fields).
+	log {
+		output file /var/log/caddy/access.log {
+			roll_size 10mb
+			roll_keep 10
+			roll_keep_for 720h
+			mode 644
+		}
+		format json
+	}
+
+	header {
+		X-Content-Type-Options nosniff
+		X-Frame-Options DENY
+		Referrer-Policy no-referrer
+		# Caddy already sets Strict-Transport-Security once TLS is active;
+		# this makes the intent explicit and pins a full year.
+		Strict-Transport-Security "max-age=31536000"
+	}
+
+	# The single test page has no API, no user input, and nothing to POST
+	# to -- everything else 404s, which shows up cleanly in the logs as
+	# scanner traffic rather than being confused with real page views.
+	handle_errors {
+		respond "{http.error.status_code} {http.error.status_text}" {http.error.status_code}
+	}
+}

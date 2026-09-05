@@ -1,0 +1,37 @@
+== Memory-dump comparison: confidential marker occurrences, dual-encoding scan ==
+(strings -e s = 8-bit/UTF-8 scan; strings -e l = UTF-16LE scan, needed to see
+ raw .NET `string` objects, which strings' default 8-bit mode cannot find)
+
+Own algorithm (Lab 3.1, SecureApp /api/memory/confidential, AES-256-GCM):
+  marker: SECUREAPP-RECHECK-MARKER-W7H2
+                          UTF-8   UTF-16LE
+  after create:             3        2
+  after delete + forced GC: 3        2      (unchanged -- see explanation below)
+
+  Residual matches identified as: the raw HTTP request/response JSON bodies
+  (UTF-8 socket buffers) and the deserialized/decrypted .NET string objects
+  used to build that one response (UTF-16LE). None are application-level
+  data structures -- InMemoryRecordStore itself holds only AES-GCM ciphertext.
+  Explanation: ASP.NET Core/Kestrel/System.Text.Json reuse pooled buffers
+  (ArrayPool<byte>/ArrayPool<char>) for request/response processing; a
+  buffer returned to the pool is not garbage from the GC's point of view
+  (the pool still references it) and is not zeroed on return, so it
+  survives even a forced full GC. This is a platform characteristic, not
+  an application-level defect.
+
+Provided algorithm (Lab 3.2, raw HttpListener /confidential, static-key XOR):
+  marker: PROVIDED-DUMP-MARKER-Q9F3K2
+                          UTF-8   UTF-16LE
+  after create:             6        7
+  after delete + forced GC: 2        2      (reduced, but not to zero)
+
+  The 2 residual UTF-16LE matches after delete + forced GC were extracted
+  and read verbatim:
+    "...CREATE confidential: title='dump-test' content='PROVIDED-DUMP-MARKER-Q9F3K2'"
+    "...DELETE confidential#3title='dump-test' content='PROVIDED-DUMP-MARKER-Q9F3K2'"
+  These are literal entries in the program's own `activityLog` list, which
+  is never trimmed or cleared. Unlike the own algorithm's residue, this is
+  an avoidable, application-level defect (logging the confidential value in
+  cleartext) -- not a platform artifact -- and it persists for the entire
+  lifetime of the process, regardless of how many times the record is
+  updated, deleted, or how many full garbage collections run.

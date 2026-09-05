@@ -1,0 +1,4 @@
+plaintext:  PROVIDED-DUMP-MARKER-Q9F3K2
+ciphertext: PStiJT0lMS1OaSYoM18oNX8gICsAYAt1XjIf
+recovered:  PROVIDED-DUMP-MARKER-Q9F3K2
+match: True

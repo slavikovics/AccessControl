@@ -1,0 +1,22 @@
+== Fault-injection test, own algorithm (Lab 3.1, ASP.NET Core /api/memory/confidential) ==
+[PASS] wrong JSON types (number/bool instead of string)      -> HTTP 400 (ValidationProblem)
+[PASS] syntactically malformed JSON body                     -> HTTP 400 (ValidationProblem)
+[PASS] missing required field ('content' absent)             -> HTTP 400 (ValidationProblem)
+[PASS] empty request body                                    -> HTTP 400 (ValidationProblem)
+[PASS] oversized content (10050 chars, limit 10000)           -> HTTP 400 (ValidationProblem)
+[PASS] very large content (5 MB)                              -> HTTP 400 (ValidationProblem)
+[PASS] control characters inside content (\n, \t)             -> HTTP 201 (accepted as data)
+Result: 7/7 differentiated, correct responses. 0 crashes, 0 hangs, 0 stack traces leaked.
+
+== Fault-injection test, provided algorithm (Lab 3.2, raw HttpListener /confidential) ==
+[FAIL ] wrong JSON types (number/bool instead of string)      -> HTTP 500 (raw exception message)
+[FAIL ] syntactically malformed JSON body                     -> HTTP 500 (raw exception message)
+[FAIL ] missing required field ('content' absent)             -> HTTP 500 (raw exception message)
+[FAIL ] empty request body                                    -> HTTP 500 (raw exception message)
+[FAIL ] oversized content (10050 chars)                       -> HTTP 201 (accepted, no limit at all)
+[FAIL ] very large content (5 MB)                              -> HTTP 201 (accepted, no limit at all)
+[PASS] control characters inside content (\n, \t)             -> HTTP 201 (accepted as data)
+Result: 1/7 correct by accident (no crash), 6/7 either leak exception detail (500) or
+accept unbounded input (201). 0 crashes, 0 hangs, but every failure mode is
+undifferentiated (identical HTTP 500 for four unrelated causes) or absent (no
+size limit at all).

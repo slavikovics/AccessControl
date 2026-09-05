@@ -1,0 +1,16 @@
+== Concurrency test: 200 concurrent POST requests, 50 in flight at a time ==
+
+Own algorithm (Lab 3.1, ConcurrentDictionary + Interlocked.Increment):
+  responses received:        200 / 200
+  unique ids returned:       200 / 200
+  records stored afterward:  200 / 200
+  duplicate ids:             none
+  => no data loss, no corruption.
+
+Provided algorithm (Lab 3.2, plain Dictionary + id++, no lock):
+  responses received:        200 / 200
+  unique ids returned:       199 / 200   (one id issued to two different requests)
+  records stored afterward:  198 / 200   (one of the two colliding writes overwrote the other)
+  duplicate ids:             id=11 returned to 2 different requests
+  => silent data loss under concurrent writes: 2 of 200 client-visible records
+     never end up durably stored, with no error returned to either client.
