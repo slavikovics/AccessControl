@@ -2,6 +2,13 @@
 bin/
 obj/
 
+# Lab2.1-SecureApp runtime data and frontend build artifacts
+*.db
+*.db-shm
+*.db-wal
+node_modules/
+dist/
+
 # LaTeX build artifacts (lab reports keep only the sources and the built PDF)
 *.aux
 *.fdb_latexmk

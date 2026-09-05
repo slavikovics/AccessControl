@@ -1,0 +1,43 @@
+== Step 1: Register two independent users ==
+[OK] Register 'alice'  $ curl -X POST http://localhost:5080/api/auth/register -d '{"username":"alice",...}'
+[OK] Register 'bob'
+== Step 2: Registration input validation ==
+[OK] Reject username/password shorter than the minimum length (HTTP 400)
+[OK] Reject duplicate username 'alice' (HTTP 409)
+== Step 3: Log in both users and inspect the session cookie ==
+[OK] Log in as 'alice' (HTTP 200)
+[OK] Session cookie carries HttpOnly; Secure; SameSite=Strict
+[OK] Log in as 'bob'
+== Step 4: Wrong password and unknown username return the identical response ==
+[OK] Wrong password and unknown username both return: {"message":"Invalid username or password."}
+== Step 5: Brute-force lockout after repeated failed logins ==
+[OK] 6th login for 'bruteuser' rejected with HTTP 429 even though the password is now correct
+== Step 6: Unauthenticated access to protected endpoints ==
+[DENIED ] Read                   GET /api/confidential (no session) (HTTP 401)
+[DENIED ] Read                   GET /api/public (no session) (HTTP 401)
+== Step 7: 'alice' creates one confidential and one public record ==
+[OK] Create confidential record #1 (title='Card')
+[OK] Create public record #1 (title='Notice')
+== Step 8: Owner can read, search, update and delete their own records ==
+[ALLOWED] Read                   GET confidential/1 (owner)   (HTTP 200)
+[ALLOWED] Search                 confidential?query=card (owner) (HTTP 200)
+[ALLOWED] Update                 PUT confidential/1 (owner)   (HTTP 200)
+== Step 9: A second user cannot see, edit or delete the first user's records ==
+[DENIED ] Read                   GET alice's confidential/1 (bob) (HTTP 404)
+[DENIED ] Update                 PUT alice's confidential/1 (bob) (HTTP 404)
+[DENIED ] Delete                 DELETE alice's confidential/1 (bob) (HTTP 404)
+[OK] 'bob' lists confidential records: sees none of alice's data ([])
+== Step 10: Cross-origin requests from an unregistered origin are rejected ==
+[OK] OPTIONS preflight from http://evil.example carries no Access-Control-Allow-Origin header
+[OK] OPTIONS preflight from the registered frontend origin (http://localhost:5175) is allowed
+== Step 11: Confidential data is unreadable in the raw database file, public data is not ==
+[OK] Confidential content '4111-0000-0000-0000' not found anywhere in the raw database file
+[OK] Public content 'Office closed Friday' IS found in plain text (expected: non-confidential)
+== Step 12: Logging out invalidates the session ==
+[OK] GET /api/auth/me after logout is rejected (HTTP 401)
+=== Summary ===
+Operations: 25 total, 0 failed
+  Delete       allowed 0 / 1     denied 1
+  Read         allowed 1 / 4     denied 3
+  Search       allowed 1 / 1     denied 0
+  Update       allowed 1 / 2     denied 1
