@@ -1,7 +1,5 @@
 namespace OpenfireLab;
 
-// Thin wrapper around the `docker` CLI so Steps read as a sequence of intentions
-// ("install Java", "copy the config in") rather than raw ProcessStartInfo plumbing.
 static class Docker
 {
     public static bool Exec(string description, string file, params string[] args)

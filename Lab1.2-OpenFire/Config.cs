@@ -12,18 +12,12 @@ static class Config
     public const int ClientPort = 5222;
     public const int ServerPort = 5269;
 
-    // Administrator: the built-in Openfire "admin" account — full access to the Admin
-    // Console and every subsystem. Its password is set during autosetup.
     public const string AdminUser = "admin";
     public const string AdminPassword = "AdminP@ss1";
 
-    // User: a registered XMPP account, granted "member" affiliation (voice) in the room
-    // the administrator created — full participation in the subsystem it was given.
     public const string AppUser = "iuser";
     public const string AppUserPassword = "UserP@ss1";
 
-    // Guest: no account at all — anonymous login, joins the same room as a "visitor" in a
-    // moderated room, i.e. can read the conversation but has no voice to post in it.
     public const string GuestNickname = "guest";
 
     public const string RoomName = "labroom";

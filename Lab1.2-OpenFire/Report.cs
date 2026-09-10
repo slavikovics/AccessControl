@@ -19,8 +19,6 @@ static class Report
         Console.WriteLine($"== Step {number}: {description} ==");
     }
 
-    // Lets the operator inspect real system state between steps; skipped when stdin isn't a
-    // TTY (piped/CI runs) so the program doesn't hang waiting for a key that will never come.
     public static void WaitForContinue()
     {
         if (Console.IsInputRedirected) return;
@@ -54,8 +52,6 @@ static class Report
         return ok;
     }
 
-    // A synthetic checkpoint (e.g. "service became ready") that isn't itself one external
-    // command but should still count towards the operation summary.
     public static void Note(string description, bool ok = true)
     {
         _opTotal++;
@@ -63,13 +59,9 @@ static class Report
         Console.WriteLine($"[{(ok ? "OK" : "FAIL")}] {description}");
     }
 
-    // Runs `file args...` as the given identity's attempt at `label` on `resource`; a zero
-    // exit code means the attempt was allowed, anything else means the server denied it.
     public static bool Check(string identity, string label, string resource, string file, params string[] args) =>
         Record(identity, label, resource, RunSilent(file, args));
 
-    // Same bookkeeping as Check, for callers that already determined ALLOWED/DENIED some
-    // other way (parsing an HTTP response, a probe script's own verdict, ...).
     public static bool Record(string identity, string label, string resource, bool allowed)
     {
         CheckTotal[label] = CheckTotal.GetValueOrDefault(label) + 1;
