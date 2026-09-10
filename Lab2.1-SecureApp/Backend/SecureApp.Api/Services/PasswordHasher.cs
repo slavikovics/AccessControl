@@ -2,8 +2,6 @@ using System.Security.Cryptography;
 
 namespace SecureApp.Api.Services;
 
-// PBKDF2-HMACSHA256 with a random 128-bit salt per user and 210k iterations
-// (OWASP-recommended minimum as of 2023 for PBKDF2-SHA256).
 public static class PasswordHasher
 {
     private const int SaltSize = 16;

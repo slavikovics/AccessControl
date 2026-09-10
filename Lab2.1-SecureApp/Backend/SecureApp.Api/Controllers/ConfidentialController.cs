@@ -9,8 +9,6 @@ using SecureApp.Api.Services;
 
 namespace SecureApp.Api.Controllers;
 
-// Every query below is scoped to OwnerId == CurrentUserId: users can only ever
-// reach their own confidential records, and content is encrypted at rest.
 [ApiController]
 [Route("api/confidential")]
 [Authorize]

@@ -22,8 +22,6 @@ public class AuthController(AppDbContext db, TokenService tokens, LoginAttemptTr
         var exists = await db.Users.AnyAsync(u => u.Username == normalized);
         if (exists)
         {
-            // Deliberately vague: do not reveal whether a specific username exists
-            // beyond what registration itself already implies.
             return Conflict(new { message = "Username is not available." });
         }
 
@@ -52,8 +50,6 @@ public class AuthController(AppDbContext db, TokenService tokens, LoginAttemptTr
         if (!passwordOk)
         {
             attempts.RecordFailure(normalized);
-            // Same message whether the username or the password was wrong,
-            // so the endpoint cannot be used to enumerate valid usernames.
             return Unauthorized(new { message = "Invalid username or password." });
         }
 

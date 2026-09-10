@@ -50,13 +50,11 @@ export default function RecordsPanel({ kind, label, description }: Props) {
         setError(errorMessage(err, `Could not load ${label.toLowerCase()} records.`));
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [kind],
   );
 
   useEffect(() => {
     load(query);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [kind]);
 
   function openCreate() {

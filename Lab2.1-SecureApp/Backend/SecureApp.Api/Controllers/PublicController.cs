@@ -8,9 +8,6 @@ using SecureApp.Api.Models;
 
 namespace SecureApp.Api.Controllers;
 
-// Non-confidential data: stored in plain text, but still access-controlled to
-// the owner and reached only via authenticated, parameterized EF Core queries
-// (no string-built SQL, so this endpoint is not SQL-injectable).
 [ApiController]
 [Route("api/public")]
 [Authorize]

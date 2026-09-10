@@ -25,9 +25,6 @@ builder.Services.AddSingleton<InMemoryRecordStore>();
 
 builder.Services.AddCors(options =>
 {
-    // Named, narrow CORS policy: only the known frontend origin, and only
-    // with credentials so the auth cookie can actually be sent cross-origin
-    // during local development (frontend on :5173, API on its own port).
     options.AddPolicy(FrontendCorsPolicy, policy => policy
         .WithOrigins(frontendOrigin)
         .AllowAnyHeader()
@@ -50,8 +47,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ClockSkew = TimeSpan.FromSeconds(30),
         };
 
-        // The JWT is delivered as an HttpOnly cookie (never exposed to page
-        // JavaScript), so read it from there instead of an Authorization header.
         options.Events = new JwtBearerEvents
         {
             OnMessageReceived = context =>
@@ -82,7 +77,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Baseline security response headers (defense in depth beyond CORS/auth).
 app.Use(async (context, next) =>
 {
     context.Response.Headers.Append("X-Content-Type-Options", "nosniff");

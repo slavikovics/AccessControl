@@ -2,9 +2,6 @@ using System.Collections.Concurrent;
 
 namespace SecureApp.Api.Services;
 
-// Simple in-memory brute-force mitigation: after too many failed logins for a
-// username, further attempts are rejected for a cooldown window regardless of
-// whether the password supplied is correct.
 public class LoginAttemptTracker
 {
     private const int MaxFailedAttempts = 5;

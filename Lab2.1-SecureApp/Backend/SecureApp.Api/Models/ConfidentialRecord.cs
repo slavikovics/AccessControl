@@ -1,7 +1,5 @@
 namespace SecureApp.Api.Models;
 
-// Confidential data: title and content are stored AES-256-GCM encrypted at rest,
-// so a raw copy of the database file alone does not disclose the plaintext.
 public class ConfidentialRecord
 {
     public int Id { get; set; }

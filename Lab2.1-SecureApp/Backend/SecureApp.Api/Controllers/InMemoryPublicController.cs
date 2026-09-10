@@ -6,8 +6,6 @@ using SecureApp.Api.Services;
 
 namespace SecureApp.Api.Controllers;
 
-// Lab 3.1: same shape and access-control rules as PublicController, but
-// backed by InMemoryRecordStore instead of the SQLite-backed DbContext.
 [ApiController]
 [Route("api/memory/public")]
 [Authorize]

@@ -2,12 +2,6 @@ using System.Collections.Concurrent;
 
 namespace SecureApp.Api.Services;
 
-// Lab 3.1: an in-process, non-persisted data store. Nothing here ever touches
-// disk (no EF Core, no file, no serialization to a cache) -- every record
-// lives only as long as this store's dictionaries are reachable, and is gone
-// the moment the process restarts. Confidential entries are encrypted with
-// the same AES-256-GCM key as the persisted confidential records, immediately
-// on write, so their ciphertext form is what actually occupies the heap.
 public class InMemoryRecordStore(ConfidentialCrypto crypto)
 {
     public record ConfidentialEntry(int Id, int OwnerId, byte[] EncryptedTitle, byte[] EncryptedContent, DateTime CreatedAtUtc, DateTime UpdatedAtUtc);

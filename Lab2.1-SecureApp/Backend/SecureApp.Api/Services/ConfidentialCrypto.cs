@@ -3,8 +3,6 @@ using System.Text;
 
 namespace SecureApp.Api.Services;
 
-// AES-256-GCM authenticated encryption for confidential fields at rest.
-// Layout per blob: [12-byte nonce][ciphertext][16-byte tag].
 public class ConfidentialCrypto(IConfiguration configuration)
 {
     private const int NonceSize = 12;
@@ -15,9 +13,6 @@ public class ConfidentialCrypto(IConfiguration configuration)
 
     private static byte[] DeriveKey(string configuredKey)
     {
-        // Accept a passphrase of any length from configuration/environment and
-        // derive a fixed 256-bit key from it, rather than requiring an exact
-        // base64-encoded 32-byte value.
         return SHA256.HashData(Encoding.UTF8.GetBytes(configuredKey));
     }
 
@@ -41,11 +36,6 @@ public class ConfidentialCrypto(IConfiguration configuration)
         }
         finally
         {
-            // Best-effort only: this scrubs our own intermediate UTF-8 buffer,
-            // but the caller's original `string plaintext` is immutable and
-            // may already have additional copies elsewhere (e.g. the JSON
-            // deserializer's internal buffers) that this method cannot reach
-            // or clear -- see the Lab 3.1 report's code-security analysis.
             Array.Clear(plainBytes);
         }
     }
@@ -65,8 +55,6 @@ public class ConfidentialCrypto(IConfiguration configuration)
         }
         finally
         {
-            // The returned System.String copy of the plaintext cannot be
-            // scrubbed (strings are immutable in .NET), only this byte buffer.
             Array.Clear(plainBytes);
         }
     }

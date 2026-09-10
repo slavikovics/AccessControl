@@ -6,9 +6,6 @@ using SecureApp.Api.Services;
 
 namespace SecureApp.Api.Controllers;
 
-// Lab 3.1: same shape and access-control rules as ConfidentialController, but
-// backed by InMemoryRecordStore instead of the SQLite-backed DbContext --
-// nothing here is ever written to disk.
 [ApiController]
 [Route("api/memory/confidential")]
 [Authorize]

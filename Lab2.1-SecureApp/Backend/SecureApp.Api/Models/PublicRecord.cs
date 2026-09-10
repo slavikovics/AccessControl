@@ -1,6 +1,5 @@
 namespace SecureApp.Api.Models;
 
-// Non-confidential data: stored as plain text, still access-controlled to the owner.
 public class PublicRecord
 {
     public int Id { get; set; }

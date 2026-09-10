@@ -1,7 +1,5 @@
 import axios from "axios";
 
-// withCredentials so the browser sends/accepts the HttpOnly auth cookie set
-// by the API; the token itself is never touched by frontend JavaScript.
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL ?? "http://localhost:5080",
   withCredentials: true,
