@@ -19,8 +19,6 @@ static class Report
         Console.WriteLine($"== Step {number}: {description} ==");
     }
 
-    // Lets the operator inspect real system state between steps; skipped when stdin isn't a
-    // TTY (piped/CI runs) so the program doesn't hang waiting for a key that will never come.
     public static void WaitForContinue()
     {
         if (Console.IsInputRedirected) return;

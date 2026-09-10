@@ -20,7 +20,7 @@ static class Processes
     {
         var psi = new ProcessStartInfo("su")
         {
-            RedirectStandardInput = true, // left open (never written to/closed) -- keeps the script's `read` blocked
+            RedirectStandardInput = true,
             RedirectStandardOutput = true,
             RedirectStandardError = true
         };
