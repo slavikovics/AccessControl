@@ -4,11 +4,11 @@ static class Verify
 {
     public static void Run()
     {
-        Report.Step(9, "Verify the administrator's privileges");
+        Report.Step(10, "Verify the administrator's privileges");
         MongoCheck(Config.AdminUser, Config.AdminPassword, "admin",
             "ListDatabases", "admin (cluster-wide)", "db.adminCommand({listDatabases:1})");
 
-        Report.Step(10, $"Verify '{Config.AppUser}' has full rights inside '{Config.AppDb}' only");
+        Report.Step(11, $"Verify '{Config.AppUser}' has full rights inside '{Config.AppDb}' only");
         MongoCheck(Config.AppUser, Config.AppUserPassword, Config.AppDb,
             "Read", $"{Config.AppDb}.{Config.PublicCollection}",
             $"db.getSiblingDB('{Config.AppDb}').{Config.PublicCollection}.find().toArray()");
@@ -22,7 +22,7 @@ static class Verify
             "Read", "otherdb.secrets (no role granted)",
             "db.getSiblingDB('otherdb').secrets.find().toArray()");
 
-        Report.Step(11, $"Verify '{Config.GuestUser}' can only read '{Config.PublicCollection}'");
+        Report.Step(12, $"Verify '{Config.GuestUser}' can only read '{Config.PublicCollection}'");
         MongoCheck(Config.GuestUser, Config.GuestPassword, Config.AppDb,
             "Read", $"{Config.AppDb}.{Config.PublicCollection}",
             $"db.getSiblingDB('{Config.AppDb}').{Config.PublicCollection}.find().toArray()");
@@ -33,7 +33,7 @@ static class Verify
             "Write", $"{Config.AppDb}.{Config.PublicCollection}",
             $"db.getSiblingDB('{Config.AppDb}').{Config.PublicCollection}.insertOne({{from:'{Config.GuestUser}'}})");
 
-        Report.Step(12, "Verify that an unauthenticated client is rejected outright");
+        Report.Step(13, "Verify that an unauthenticated client is rejected outright");
         MongoCheckNoAuth("Write", $"{Config.AppDb}.{Config.PublicCollection} (no credentials)",
             $"db.getSiblingDB('{Config.AppDb}').{Config.PublicCollection}.insertOne({{from:'anonymous'}})");
     }

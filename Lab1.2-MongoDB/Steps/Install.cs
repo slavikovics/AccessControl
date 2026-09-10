@@ -17,8 +17,6 @@ static class Install
         WaitReady();
     }
 
-    // The container's port is open before mongod inside it has finished initialising, so
-    // poll with a plain (pre-auth) ping instead of assuming the first connection succeeds.
     static void WaitReady()
     {
         for (var i = 0; i < 30; i++)

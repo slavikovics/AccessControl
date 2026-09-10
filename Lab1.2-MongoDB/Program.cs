@@ -9,6 +9,7 @@ if (!Report.RunSilent("docker", "info"))
 
 Install.Run();
 Configure.Run();
+Ui.Run();
 Verify.Run();
 Cleanup.Run();
 
