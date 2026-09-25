@@ -1,10 +1,4 @@
 #!/usr/bin/env bash
-# Black-box security audit of Lab2.1-SecureApp, per the methodology in
-# section 3 of the Lab 2.2 report. Assumes the backend is already running
-# on $BASE (Development mode) with a fresh database, and that no scanning
-# suite (ZAP/nikto/sqlmap/gobuster) is installed in this environment --
-# every phase below is a small, purpose-built script implementing the same
-# category of check those tools would run.
 set -uo pipefail
 
 BASE="${BASE:-http://localhost:5080}"
@@ -65,10 +59,6 @@ check_header "X-Frame-Options"
 check_header "Referrer-Policy"
 check_header "Strict-Transport-Security"
 check_header "Content-Security-Policy"
-
-if echo "$HEADERS" | grep -qi "^Set-Cookie:.*secure" ; then
-  : # covered separately in Phase 4
-fi
 
 phase "Phase 3: Injection testing (SQL injection, per OWASP Testing Guide WSTG-INPV)"
 curl -s -o /dev/null -X POST "$BASE/api/auth/register" -H 'Content-Type: application/json' -d '{"username":"canary","password":"CanaryPass123"}'
@@ -149,6 +139,23 @@ if [[ -n "$DB_PATH" ]]; then
   fi
 else
   info "DB_PATH not provided, skipping raw-file inspection"
+fi
+
+phase "Phase 8: Cross-check against an automated scanner (Nikto)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+NIKTO_OUT="$SCRIPT_DIR/nikto_output.txt"
+if command -v nikto >/dev/null 2>&1; then
+  rm -f "$NIKTO_OUT"
+  nikto -h "$BASE" -ask no -Format txt -o "$NIKTO_OUT" >/dev/null 2>&1
+  NIKTO_ITEMS=$(grep -c '^+ GET\|^+ POST' "$NIKTO_OUT" 2>/dev/null || echo 0)
+  info "Nikto scan complete, $NIKTO_ITEMS item(s) reported -- full log saved alongside this one, at $(basename "$NIKTO_OUT")"
+  if grep -qi "strict-transport-security\|content-security-policy" "$NIKTO_OUT"; then
+    info "Nikto also surfaced the missing transport-security headers found manually in Phase 2"
+  else
+    info "Nikto did NOT surface the missing Strict-Transport-Security/Content-Security-Policy headers (Phase 2) or the /openapi/v1.json disclosure (Phase 1) found by this script -- its default scan discloses present headers but does not check for absent ones or crawl an OpenAPI document"
+  fi
+else
+  info "nikto not installed -- skipping automated scanner cross-check (install via 'apt install nikto' to enable)"
 fi
 
 echo
