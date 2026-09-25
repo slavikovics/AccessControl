@@ -1,0 +1,26 @@
+== /var/ossec/logs/alerts/alerts.log : brute-force alert (rule 5712, level 10) ==
+** Alert 1789862739.45135: mail  - syslog,sshd,authentication_failures,
+2026 Sep 20 00:05:39 weaselcloud-3522->/var/log/auth.log
+Rule: 5712 (level 10) -> 'SSHD brute force trying to get access to the system.'
+Src IP: 109.160.32.83
+2026-09-20T00:05:37.278233+00:00 weaselcloud-3522 sshd[335280]: Invalid user user from 109.160.32.83 port 35172
+2026-09-20T00:05:19.628712+00:00 weaselcloud-3522 sshd[335272]: Failed password for invalid user hduser from 109.160.32.83 port 35410 ssh2
+
+== /var/ossec/logs/alerts/alerts.log : Caddy JSON line the SSH-oriented decoders cannot parse (rule 1003, level 13) ==
+Rule: 1003 (level 13) -> 'Non standard syslog message (size too large).'
+2026-09-20T03:20:40.822244+00:00 weaselcloud-3522 caddy[84848]: {"level":"info","ts":1789874440.8216176,"logger":"http.log.access","msg":"handled request","request":{"remote_ip":"64.23.237.42", ...
+
+== /var/ossec/logs/active-responses.log : first ban issued after OSSEC was started ==
+Sat Sep  5 19:44:34 UTC 2026 /var/ossec/active-response/bin/host-deny.sh add - 193.46.255.86 1788637474.69 2502
+Sat Sep  5 19:44:34 UTC 2026 /var/ossec/active-response/bin/firewall-drop.sh add - 193.46.255.86 1788637474.69 2502
+Sat Sep  5 19:55:05 UTC 2026 /var/ossec/active-response/bin/host-deny.sh delete - 193.46.255.86 1788637474.69 2502
+
+== iptables -S | grep DROP (bans active at the time of analysis) ==
+-A OSSEC -s 45.148.10.152/32 -j DROP
+-A OSSEC -s 193.47.62.69/32 -j DROP
+-A OSSEC -s 62.60.130.242/32 -j DROP
+
+== /etc/hosts.deny (tail) ==
+ALL:62.60.130.242
+ALL:193.47.62.69
+ALL:45.148.10.152

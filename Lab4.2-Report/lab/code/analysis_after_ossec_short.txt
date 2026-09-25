@@ -1,0 +1,53 @@
+Log analysis  window: 2026-09-05T19:16 .. now   generated 2026-09-20 21:21
+======================================================================
+SSH  (/var/log/auth.log*)
+======================================================================
+Period covered by data: 2026-09-05 .. 2026-09-20
+Failed authentication attempts: 21108   (by method: {'password': 21080, 'none': 28})
+'Invalid user' events (unknown login name): 8057
+Connections dropped before authentication ([preauth]): 16919
+Unique source IPs with failed attempts: 353
+Successful logins: 25
+
+======================================================================
+OSSEC
+======================================================================
+Alerts in window: 55316   by level: {2: 1586, 3: 133, 4: 197, 5: 49667, 7: 132, 8: 33, 10: 3204, 13: 364}
+
+Top 10 rules:
+    20435  rule 5710 lvl 5  Attempt to login using a non-existent user
+    18509  rule 5503 lvl 5  User login failed.
+    10674  rule 5716 lvl 5  SSHD authentication failed.
+     2325  rule 2502 lvl 10  User missed the password more than one time
+     1576  rule 1002 lvl 2  Unknown problem somewhere in the system.
+      555  rule 5712 lvl 10  SSHD brute force trying to get access to the system.
+      364  rule 1003 lvl 13  Non standard syslog message (size too large).
+      230  rule 5551 lvl 10  Multiple failed logins in a small period of time.
+      188  rule 5740 lvl 4  ssh connection reset by peer
+       94  rule 5720 lvl 10  Multiple SSHD authentication failures.
+
+Top 10 alert source IPs:
+     4600  103.97.215.11
+     2393  2.57.121.112
+     1845  2.57.121.25
+     1481  103.54.100.252
+     1337  202.165.25.8
+     1334  193.46.255.86
+     1208  193.187.110.213
+     1107  80.94.92.234
+      947  92.118.39.77
+      936  2.57.122.238
+
+Active-response block events (one per ban, host-deny + firewall-drop counted once): 2103 against 133 unique IPs; unblocks (ban expired): 2099
+IPs banned more than once (returned after the 600 s ban expired): 83 of 133
+Top 10 most-banned IPs:
+      188  45.148.10.152  first ban: Sun Sep  6 00:05:45
+      180  45.148.10.141  first ban: Sat Sep  5 22:12:16
+      179  193.47.62.69  first ban: Sat Sep  5 22:56:51
+      177  45.148.10.151  first ban: Sat Sep  5 22:32:07
+      172  45.148.10.157  first ban: Sat Sep  5 22:06:48
+      154  62.60.130.253  first ban: Sat Sep  5 23:21:20
+      147  62.60.130.242  first ban: Sat Sep  5 22:42:08
+       92  62.60.130.201  first ban: Sat Sep  5 23:06:39
+       56  193.46.255.86  first ban: Sat Sep  5 19:44:34
+       24  109.160.32.63  first ban: Fri Sep 11 18:33:04
