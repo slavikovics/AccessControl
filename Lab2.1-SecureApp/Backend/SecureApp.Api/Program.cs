@@ -8,7 +8,7 @@ using SecureApp.Api.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 const string FrontendCorsPolicy = "FrontendCorsPolicy";
-var frontendOrigin = builder.Configuration["Frontend:Origin"] ?? "http://localhost:5173";
+var frontendOrigin = builder.Configuration["Frontend:Origin"] ?? "http://localhost:58239";
 var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("Jwt:Key is not configured.");
 var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "SecureApp";
 

@@ -27,8 +27,9 @@ npm install
 npm run dev
 ```
 
-Opens on `http://localhost:5173` (or the next free port — set
-`Frontend__Origin` on the backend to match if it differs, since CORS is
+Opens on `http://localhost:58239` (a fixed, uncommon port — set via
+`server.port` in `vite.config.ts` so it doesn't silently drift; set
+`Frontend__Origin` on the backend to match if you change it, since CORS is
 locked to a single named origin).
 
 ## Security controls implemented

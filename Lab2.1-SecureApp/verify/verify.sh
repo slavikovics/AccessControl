@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
-# Demonstration + verification script for Lab2.1-SecureApp.
-# Assumes the backend is already running on $BASE with a fresh database.
 set -uo pipefail
 
 BASE="${BASE:-http://localhost:5080}"
-ORIGIN="${ORIGIN:-http://localhost:5175}"
+ORIGIN="${ORIGIN:-http://localhost:58239}"
 JAR_DIR="$(mktemp -d)"
 DB_PATH="${DB_PATH:-}"
 
@@ -27,12 +25,8 @@ fail() {
 }
 
 check() {
-  # check <label> <resource> <expected: allowed|denied> <actual http code> <expected code(s), space separated>
   local label="$1" resource="$2" expected="$3" code="$4" want="$5"
   TOTAL=$((TOTAL+1))
-  # The printed verdict reflects what the server actually did (2xx = the
-  # operation was allowed, anything else = it was denied); "expected"/"want"
-  # is only used to flag a genuine test failure below.
   local verdict="DENIED"
   [[ "$code" == 2* ]] && verdict="ALLOWED"
   local correct="no"
