@@ -1,10 +1,4 @@
 #!/usr/bin/env bash
-# Installs and configures Caddy for Lab 4.1 on a fresh Debian/Ubuntu server.
-# Run as root (or via sudo) on the remote server itself, e.g.:
-#   scp -r deploy Caddyfile user@host:/tmp/lab4-deploy
-#   ssh user@host 'sudo bash /tmp/lab4-deploy/deploy/install.sh'
-#
-# Idempotent: safe to re-run after changing the Caddyfile or DOMAIN.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"

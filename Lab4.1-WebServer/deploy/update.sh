@@ -1,9 +1,4 @@
 #!/usr/bin/env bash
-# Redeploys just the built frontend + Caddyfile to an already-provisioned
-# server (see install.sh for first-time setup), then reloads Caddy without
-# dropping connections.
-#
-# Usage: bash deploy/update.sh user@host
 set -euo pipefail
 
 TARGET="${1:?Usage: bash deploy/update.sh user@host}"
