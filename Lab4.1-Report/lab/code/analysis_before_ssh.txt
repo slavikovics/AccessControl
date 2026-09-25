@@ -1,0 +1,49 @@
+Log analysis  window: start .. 2026-09-05T19:16   generated 2026-09-20 21:21
+======================================================================
+SSH  (/var/log/auth.log*)
+======================================================================
+Period covered by data: 2026-09-03 .. 2026-09-05
+Failed authentication attempts: 13458   (by method: {'password': 13453, 'none': 5})
+'Invalid user' events (unknown login name): 2975
+Connections dropped before authentication ([preauth]): 12190
+Unique source IPs with failed attempts: 64
+Successful logins: 44
+
+Failed attempts per day:
+  2026-09-03  19
+  2026-09-04  9107
+  2026-09-05  4332
+
+Top 10 source IPs (failed attempts):
+     7002  36.69.158.203
+      784  45.153.34.235
+      784  91.92.42.52
+      501  91.92.40.45
+      501  91.92.40.27
+      381  45.119.214.98
+      320  176.53.159.197
+      274  176.53.159.198
+      235  47.251.126.207
+      225  119.6.54.138
+
+Top 10 attacked user names:
+     9652  root
+      567  admin
+      204  user
+      169  deploy
+      165  ubuntu
+      113  test
+       79  user2
+       59  ftpuser
+       49  ec2-user
+       44  user1
+
+Attempts against 'root': 9652  (71.7% of all failed attempts)
+
+Successful logins by (method, user, source IP) -- verify each is you:
+       38  publickey  root       10.0.0.4
+        4  password   root       37.214.57.***
+        2  password   root       10.0.0.4
+
+IPs seen in the successful-login list AND the failed list (possible compromise or typo):
+  37.214.57.***  failed=3

@@ -1,0 +1,119 @@
+Log analysis  window: start .. 2026-09-05T19:16   generated 2026-09-20 21:21
+======================================================================
+SSH  (/var/log/auth.log*)
+======================================================================
+Period covered by data: 2026-09-03 .. 2026-09-05
+Failed authentication attempts: 13458   (by method: {'password': 13453, 'none': 5})
+'Invalid user' events (unknown login name): 2975
+Connections dropped before authentication ([preauth]): 12190
+Unique source IPs with failed attempts: 64
+Successful logins: 44
+
+Failed attempts per day:
+  2026-09-03  19
+  2026-09-04  9107
+  2026-09-05  4332
+
+Failed attempts by hour of day (UTC/server time):
+  00:49 01:176 02:478 03:1762 04:953 05:897 06:1018 07:1162 08:1110 09:1047 10:1352 11:829 12:874 13:536 14:124 15:424 16:157 17:80 18:56 19:130 20:101 21:85 22:19 23:39
+
+Top 10 source IPs (failed attempts):
+     7002  36.69.158.203
+      784  45.153.34.235
+      784  91.92.42.52
+      501  91.92.40.45
+      501  91.92.40.27
+      381  45.119.214.98
+      320  176.53.159.197
+      274  176.53.159.198
+      235  47.251.126.207
+      225  119.6.54.138
+
+Top 10 attacked user names:
+     9652  root
+      567  admin
+      204  user
+      169  deploy
+      165  ubuntu
+      113  test
+       79  user2
+       59  ftpuser
+       49  ec2-user
+       44  user1
+
+Top 10 /24 (IPv4) or /48 (IPv6) networks:
+     7002  36.69.158.0/24
+     1002  91.92.40.0/24
+      784  45.153.34.0/24
+      784  91.92.42.0/24
+      641  45.148.10.0/24
+      594  176.53.159.0/24
+      381  45.119.214.0/24
+      235  47.251.126.0/24
+      225  119.6.54.0/24
+      185  92.118.39.0/24
+
+Attempts against 'root': 9652  (71.7% of all failed attempts)
+
+Successful logins by (method, user, source IP) -- verify each is you:
+       38  publickey  root       10.0.0.4
+        4  password   root       37.214.57.***
+        2  password   root       10.0.0.4
+
+IPs seen in the successful-login list AND the failed list (possible compromise or typo):
+  37.214.57.***  failed=3
+
+======================================================================
+CADDY  (/var/log/caddy/access*.log*)
+======================================================================
+Total requests: 122   response bytes: 777638
+First request in window: ('2026-09-05T18:49:54.213626Z', '195.178.110.211', 'GET', '/', 'Mozilla/5.0 (compatible; CT-WP-Scanner/1.0; +https://example')
+Unique client IPs: 19
+Successful loads of the test page ('/' -> 200): 24
+Requests answered 404: 42 (34.4%)
+
+Status codes: {200: 41, 304: 4, 308: 34, 404: 42, 405: 1}
+Methods: {'GET': 109, 'HEAD': 1, 'POST': 10, 'OPTIONS': 2}
+
+Requests per day:
+  2026-09-05  122
+
+Top 10 client IPs:
+       31  147.182.149.75
+       30  165.227.39.235
+       13  64.89.161.85
+       12  10.0.0.4
+        4  203.109.63.67
+        4  162.43.240.3
+        4  146.190.40.177
+        4  44.200.182.198
+        3  195.178.110.211
+        3  104.164.173.155
+
+Top 10 User-Agents:
+       61  Mozilla/5.0 (l9scan/2.0.9383e293e2239313e2231323; +https://leakix.net)
+       16  Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/14
+        8  Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Sa
+        8  Mozilla/5.0 (iPhone; CPU iPhone OS 26_3_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like
+        5  Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chr
+        5  Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/12
+        4  curl/8.5.0
+        3  Mozilla/5.0 (compatible; CT-WP-Scanner/1.0; +https://example.com/bot)
+        3  okhttp/5.3.0
+        2  Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/13
+
+Top 10 not-found paths (scanner fingerprints):
+        2  /.env
+        2  /config.json
+        1  /wp-json/
+        1  /xmlrpc.php
+        1  /console/
+        1  /server
+        1  /server-status
+        1  /about
+        1  /login.action
+        1  /___proxy_subdomain_whm/login
+
+Top hosts requested (Host header; IP-only hits = scanners not using the domain):
+      121  test-lab4.work.gd
+        1  test-lab4.work.gd:443

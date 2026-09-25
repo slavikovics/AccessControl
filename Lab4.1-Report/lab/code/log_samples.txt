@@ -1,0 +1,10 @@
+== /var/log/auth.log (SSH) ==
+2026-09-04T03:39:37.999168+00:00 weaselcloud-3522 sshd[4729]: Failed password for root from 36.69.158.203 port 36210 ssh2
+2026-09-04T03:39:42.639743+00:00 weaselcloud-3522 sshd[4731]: Failed password for root from 36.69.158.203 port 38070 ssh2
+2026-09-05T02:56:46.780373+00:00 weaselcloud-3522 sshd[73954]: Invalid user  from 45.153.34.235 port 57998
+2026-09-20T00:05:19.628712+00:00 weaselcloud-3522 sshd[335272]: Failed password for invalid user hduser from 109.160.32.83 port 35410 ssh2
+
+== /var/log/caddy/access.log (selected fields of the JSON records) ==
+{"ts": 1788634194.214, "client_ip": "195.178.110.211", "method": "GET", "host": "test-lab4.work.gd", "uri": "/", "ua": "Mozilla/5.0 (compatible; CT-WP-Scanner/1.0; +https://example.com/bot)", "status": 200, "size": 332, "duration": 0.0097}
+{"ts": 1788634226.394, "client_ip": "165.227.39.235", "method": "GET", "host": "test-lab4.work.gd", "uri": "/", "ua": "Mozilla/5.0 (l9scan/2.0.9383e293e2239313e2231323; +https://leakix.net)", "status": 308, "size": 0, "duration": 8e-05}
+{"ts": 1788634227.399, "client_ip": "165.227.39.235", "method": "GET", "host": "test-lab4.work.gd", "uri": "/console/", "ua": "Mozilla/5.0 (l9scan/2.0.9383e293e2239313e2231323; +https://leakix.net)", "status": 308, "size": 0, "duration": 9e-05}
