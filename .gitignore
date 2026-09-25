@@ -21,3 +21,4 @@ dist/
 *.log
 *.out
 _minted-*/
+__pycache__/
