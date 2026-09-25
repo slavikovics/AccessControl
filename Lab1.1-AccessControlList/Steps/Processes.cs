@@ -30,7 +30,6 @@ static class Processes
         psi.ArgumentList.Add(fpath);
 
         using var process = Process.Start(psi)!;
-        Thread.Sleep(400);
 
         if (process.HasExited)
         {
@@ -52,7 +51,6 @@ static class Processes
             else
                 Report.RunSilent("su", "-", user, "-c", $"kill {pid}");
 
-            Thread.Sleep(200);
             var stillAlive = Report.RunSilent("kill", "-0", pid.ToString());
             var tag = stillAlive ? "DENIED " : "ALLOWED";
             Console.WriteLine($"[{tag}] {user,-6} {"StopProcess",-14} {fpath}");
