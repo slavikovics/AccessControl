@@ -2,13 +2,11 @@ namespace MongoLab;
 
 static class Config
 {
-    public const string ContainerName = "mongo_lab";
-    public const string Image = "mongo:8.2-noble";
-    public const string Volume = "mongo_lab_data";
+    public const string DataDir = "/var/lib/mongo_lab_data";
+    public const string LogFile = "/var/log/mongo_lab.log";
     public const int Port = 27017;
 
-    public const string MongoExpressContainerName = "mongo_lab_express";
-    public const string MongoExpressImage = "mongo-express:1";
+    public const string MongoExpressLogFile = "/var/log/mongo_lab_express.log";
     public const int MongoExpressPort = 8081;
 
     public const string AdminUser = "admin";

@@ -1,9 +1,9 @@
 using MongoLab;
 using MongoLab.Steps;
 
-if (!Report.RunSilent("docker", "info"))
+if (!Report.RunSilent("which", "apt-get"))
 {
-    Console.Error.WriteLine("This program needs access to the Docker daemon (add the current user to the 'docker' group, or run as root).");
+    Console.Error.WriteLine("This program needs 'apt-get' available (run on a Debian/Ubuntu host with sudo access).");
     return 1;
 }
 

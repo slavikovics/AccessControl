@@ -7,19 +7,20 @@ static class Ui
     public static void Run()
     {
         Report.Step(9, "Start Mongo Express so the setup can be checked visually");
-        Report.Execute("Pull Mongo Express image", "docker", "pull", Config.MongoExpressImage);
+        Report.Execute("Install Mongo Express", "npm", "install", "-g", "mongo-express@1.0.0");
 
         var encodedAdminPassword = Uri.EscapeDataString(Config.AdminPassword);
-        Report.Execute("Run Mongo Express container", "docker", "run", "-d", "--name", Config.MongoExpressContainerName,
-            "-p", $"{Config.MongoExpressPort}:8081",
-            "--link", $"{Config.ContainerName}:{Config.ContainerName}",
-            "-e", $"ME_CONFIG_MONGODB_SERVER={Config.ContainerName}",
-            "-e", "ME_CONFIG_MONGODB_PORT=27017",
-            "-e", $"ME_CONFIG_MONGODB_ADMINUSERNAME={Config.AdminUser}",
-            "-e", $"ME_CONFIG_MONGODB_ADMINPASSWORD={encodedAdminPassword}",
-            "-e", "ME_CONFIG_MONGODB_AUTH_DATABASE=admin",
-            "-e", "ME_CONFIG_BASICAUTH=false",
-            Config.MongoExpressImage);
+        var env = new Dictionary<string, string>
+        {
+            ["ME_CONFIG_MONGODB_SERVER"] = "127.0.0.1",
+            ["ME_CONFIG_MONGODB_PORT"] = Config.Port.ToString(),
+            ["ME_CONFIG_MONGODB_ADMINUSERNAME"] = Config.AdminUser,
+            ["ME_CONFIG_MONGODB_ADMINPASSWORD"] = encodedAdminPassword,
+            ["ME_CONFIG_MONGODB_AUTH_DATABASE"] = "admin",
+            ["ME_CONFIG_BASICAUTH_USERNAME"] = "",
+            ["PORT"] = Config.MongoExpressPort.ToString()
+        };
+        Report.ExecuteBackground("Start Mongo Express", env, "mongo-express");
 
         WaitReady();
         Report.Note($"Open http://localhost:{Config.MongoExpressPort} to browse '{Config.AppDb}' " +

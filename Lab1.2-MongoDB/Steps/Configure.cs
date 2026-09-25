@@ -9,9 +9,9 @@ static class Configure
             $"db.getSiblingDB('admin').createUser({{user:'{Config.AdminUser}',pwd:'{Config.AdminPassword}',roles:[{{role:'root',db:'admin'}}]}})");
 
         Report.Step(5, "Restart MongoDB with authorization enforced");
-        Report.Execute("Stop the bootstrap container", "docker", "rm", "-f", Config.ContainerName);
-        Report.Execute("Run MongoDB container with --auth", "docker", "run", "-d", "--name", Config.ContainerName,
-            "-p", $"{Config.Port}:27017", "-v", $"{Config.Volume}:/data/db", Config.Image, "--auth");
+        Report.Execute("Stop the bootstrap mongod", "sudo", "mongod", "--shutdown", "--dbpath", Config.DataDir);
+        Report.Execute("Start mongod with --auth", "sudo", "mongod", "--fork", "--dbpath", Config.DataDir,
+            "--port", Config.Port.ToString(), "--logpath", Config.LogFile, "--bind_ip_all", "--auth");
         WaitReadyAuthenticated();
 
         Report.Step(6, "Seed the application database with public and private data");
@@ -36,7 +36,7 @@ static class Configure
     {
         for (var i = 0; i < 30; i++)
         {
-            if (Report.RunSilent("docker", "exec", Config.ContainerName, "mongosh",
+            if (Report.RunSilent("mongosh", "--port", Config.Port.ToString(),
                     "-u", Config.AdminUser, "-p", Config.AdminPassword, "--authenticationDatabase", "admin",
                     "--quiet", "--eval", "db.runCommand({ping:1})"))
             {
@@ -50,10 +50,10 @@ static class Configure
     }
 
     static void MongoEvalNoAuth(string description, string js) =>
-        Report.Execute(description, "docker", "exec", Config.ContainerName, "mongosh", "--quiet", "--eval", js);
+        Report.Execute(description, "mongosh", "--port", Config.Port.ToString(), "--quiet", "--eval", js);
 
     static void MongoEvalAuth(string description, string js) =>
-        Report.Execute(description, "docker", "exec", Config.ContainerName, "mongosh",
+        Report.Execute(description, "mongosh", "--port", Config.Port.ToString(),
             "-u", Config.AdminUser, "-p", Config.AdminPassword, "--authenticationDatabase", "admin",
             "--quiet", "--eval", js);
 }

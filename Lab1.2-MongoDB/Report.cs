@@ -54,6 +54,36 @@ static class Report
         return ok;
     }
 
+    public static bool ExecuteBackground(string description, IDictionary<string, string> env, string file, params string[] args)
+    {
+        _opTotal++;
+        var commandText = $"{file} {string.Join(' ', args)}";
+
+        var psi = new ProcessStartInfo(file)
+        {
+            RedirectStandardOutput = true,
+            RedirectStandardError = true
+        };
+        foreach (var a in args) psi.ArgumentList.Add(a);
+        foreach (var (key, value) in env) psi.Environment[key] = value;
+
+        try
+        {
+            Process.Start(psi);
+            Console.WriteLine($"[OK] {description}");
+            Console.WriteLine($"     $ {commandText} &");
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _opFailed++;
+            Console.WriteLine($"[FAIL] {description}");
+            Console.WriteLine($"       $ {commandText} &");
+            Console.WriteLine($"       {ex.Message}");
+            return false;
+        }
+    }
+
     public static void Note(string description, bool ok = true)
     {
         _opTotal++;

@@ -39,10 +39,10 @@ static class Verify
     }
 
     static bool MongoCheck(string identity, string password, string authDb, string label, string resource, string js) =>
-        Report.Check(identity, label, resource, "docker", "exec", Config.ContainerName, "mongosh",
+        Report.Check(identity, label, resource, "mongosh", "--port", Config.Port.ToString(),
             "-u", identity, "-p", password, "--authenticationDatabase", authDb, "--quiet", "--eval", js);
 
     static bool MongoCheckNoAuth(string label, string resource, string js) =>
-        Report.Check("(none)", label, resource, "docker", "exec", Config.ContainerName, "mongosh",
+        Report.Check("(none)", label, resource, "mongosh", "--port", Config.Port.ToString(),
             "--quiet", "--eval", js);
 }
