@@ -1,0 +1,31 @@
+Using PID=60777 (/home/slavikovics-laptop/Desktop/AccessControl/Lab3.2-ProvidedAlgorithm/bin/Debug/net10.0/ProvidedAlgorithm)
+== a) create -- confidential + public records ==
+Writing full to /home/slavikovics-laptop/Desktop/AccessControl/Lab3.2-Report/lab/code/dumps/1-after-create.dmp
+Complete
+== b) update -- confidential gets a V2 marker (no /public update endpoint exists) ==
+Writing full to /home/slavikovics-laptop/Desktop/AccessControl/Lab3.2-Report/lab/code/dumps/2-after-update.dmp
+Complete
+== c) delete -- confidential removed (no /public delete endpoint exists), then a full GC is forced ==
+Writing gcdump to '/home/slavikovics-laptop/Desktop/AccessControl/Lab3.2-Report/lab/code/dumps/forced-gc.gcdump'...
+	Finished writing 175165 bytes.
+Writing full to /home/slavikovics-laptop/Desktop/AccessControl/Lab3.2-Report/lab/code/dumps/3-after-delete.dmp
+Complete
+
+=== Marker occurrences per dump (strings | grep -c) ===
+-- 1-after-create.dmp --
+  CONFIDENTIAL-PLAINTEXT-MARKER-AXQ7391: 5
+  CONFIDENTIAL-PLAINTEXT-MARKER-V2-CYT8402: 0
+  PUBLIC-PLAINTEXT-MARKER-BXQ7391: 6
+-- 2-after-update.dmp --
+  CONFIDENTIAL-PLAINTEXT-MARKER-AXQ7391: 5
+  CONFIDENTIAL-PLAINTEXT-MARKER-V2-CYT8402: 6
+  PUBLIC-PLAINTEXT-MARKER-BXQ7391: 6
+-- 3-after-delete.dmp --
+  CONFIDENTIAL-PLAINTEXT-MARKER-AXQ7391: 1
+  CONFIDENTIAL-PLAINTEXT-MARKER-V2-CYT8402: 2
+  PUBLIC-PLAINTEXT-MARKER-BXQ7391: 2
+
+NOTE: files under ./dumps are full process memory dumps -- they contain the
+live XOR-obfuscated "ciphertext" and, since ProvidedAlgorithm has no
+auth, no session secrets; still, delete them after analysis, never
+commit or share them.

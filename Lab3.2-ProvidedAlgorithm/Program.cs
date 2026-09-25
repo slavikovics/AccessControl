@@ -1,18 +1,11 @@
-// "Provided algorithm" for Lab 3.2 -- a standalone, deliberately naive
-// in-memory confidential/non-confidential data server, written the way a
-// developer unfamiliar with the lessons of Lab 3.1 might reasonably write
-// one: no framework-level validation, a hand-rolled reversible cipher with
-// a hardcoded key, an always-growing debug log, and no synchronization on
-// shared state. It is analyzed (not fixed) by the Lab 3.2 report using the
-// methodology built from Lab 3.1's findings.
 using System.Net;
 using System.Text;
 using System.Text.Json;
 
-var confidential = new Dictionary<int, string>();   // id -> base64 "ciphertext"
+var confidential = new Dictionary<int, string>();
 var confidentialTitles = new Dictionary<int, string>();
 var publicData = new Dictionary<int, (string Title, string Content)>();
-var activityLog = new List<string>();                // never trimmed, never cleared
+var activityLog = new List<string>();
 var nextConfId = 0;
 var nextPubId = 0;
 
@@ -38,26 +31,14 @@ void Handle(HttpListenerContext ctx)
 
         if (path == "/confidential" && method == "POST")
         {
-            // No model validation at all: wrong types, missing fields, and
-            // oversized payloads all surface only as whatever generic
-            // exception System.Text.Json or a null-reference happens to
-            // throw, caught below as an undifferentiated 500.
             var doc = JsonSerializer.Deserialize<Dictionary<string, string>>(body)!;
             var title = doc["title"];
             var content = doc["content"];
 
-            // "Encryption": XOR with a key hardcoded in source -- reversible
-            // by anyone who reads the code or decompiles the binary, with no
-            // nonce (the same plaintext always yields the same ciphertext).
             var cipher = XorObfuscate(content);
 
-            // Debug/audit convenience that leaks the very thing it should
-            // protect: the plaintext confidential value is appended here and
-            // never removed for the lifetime of the process.
             activityLog.Add($"{DateTime.UtcNow:o} CREATE confidential: title='{title}' content='{content}'");
 
-            // No synchronization: concurrent requests can race on nextConfId++
-            // and on the plain Dictionary indexer.
             var id = nextConfId++;
             confidential[id] = cipher;
             confidentialTitles[id] = title;
@@ -89,7 +70,7 @@ void Handle(HttpListenerContext ctx)
             {
                 id = kv.Key,
                 title = confidentialTitles[kv.Key],
-                content = XorObfuscate(kv.Value, alreadyBase64: true), // decrypt (XOR is its own inverse)
+                content = XorObfuscate(kv.Value, alreadyBase64: true),
             });
             Respond(ctx, 200, JsonSerializer.Serialize(items));
         }
@@ -114,12 +95,8 @@ void Handle(HttpListenerContext ctx)
     }
     catch (Exception ex)
     {
-        // The one and only error-handling path in the whole program: every
-        // validation failure, type mismatch, missing field, or malformed
-        // JSON ends up here, indistinguishable from every other one, as a
-        // bare 500 with the raw exception message.
         Console.Error.WriteLine($"UNHANDLED: {ex}");
-        try { Respond(ctx, 500, ex.Message); } catch { /* connection may already be gone */ }
+        try { Respond(ctx, 500, ex.Message); } catch { }
     }
 }
 

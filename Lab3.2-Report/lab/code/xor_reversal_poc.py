@@ -1,14 +1,7 @@
 #!/usr/bin/env python3
-"""
-Code-review PoC for Lab 3.2: the "encryption" in the provided algorithm
-(Lab3.2-ProvidedAlgorithm/Program.cs) is XOR with a key hardcoded in
-source ("my-static-secret-key-123"), reused as-is here -- no access to
-the running server or its process memory is needed, only the source
-code, which is exactly what a code-security review has by definition.
-"""
 import base64
 
-KEY = b"my-static-secret-key-123"  # copied verbatim from Program.cs
+KEY = b"my-static-secret-key-123"
 
 
 def xor(data: bytes, key: bytes) -> bytes:
