@@ -1,9 +1,4 @@
 #!/usr/bin/env bash
-# Reproduces the Lab 3.1 memory-dump experiment against a running
-# Lab2.1-SecureApp backend (dotnet-dump/dotnet-gcdump must be on PATH --
-# `dotnet tool install -g dotnet-dump` / `dotnet-gcdump`).
-#
-# Usage: PID=<backend pid> bash dump_analysis.sh
 set -euo pipefail
 
 PID="${PID:?Set PID to the SecureApp.Api process id (see: pgrep -f SecureApp.Api.dll)}"
@@ -36,7 +31,7 @@ dotnet-dump collect -p "$PID" -o "$OUT/2-after-update.dmp"
 echo "== c) delete -- both records removed, then a full GC is forced =="
 curl -s -o /dev/null -b "$JAR/v.txt" -X DELETE "$BASE/api/memory/confidential/$CONF_ID"
 curl -s -o /dev/null -b "$JAR/v.txt" -X DELETE "$BASE/api/memory/public/$PUB_ID"
-dotnet-gcdump collect -p "$PID" -o "$OUT/forced-gc.gcdump"   # side effect: forces a blocking GC
+dotnet-gcdump collect -p "$PID" -o "$OUT/forced-gc.gcdump"
 dotnet-dump collect -p "$PID" -o "$OUT/3-after-delete.dmp"
 
 echo
@@ -51,7 +46,6 @@ for dump in 1-after-create 2-after-update 3-after-delete; do
 done
 
 rm -rf "$JAR"
+rm -rf "$OUT"
 echo
-echo "NOTE: files under $OUT are full process memory dumps -- they contain the"
-echo "live JWT/encryption keys and other users' session cookies. Delete them"
-echo "after analysis; never commit or share them."
+echo "Dumps analyzed and deleted from $OUT."
