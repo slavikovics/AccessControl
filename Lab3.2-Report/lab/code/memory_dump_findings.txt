@@ -1,4 +1,4 @@
-Using PID=60777 (/home/slavikovics-laptop/Desktop/AccessControl/Lab3.2-ProvidedAlgorithm/bin/Debug/net10.0/ProvidedAlgorithm)
+Using PID=60777 (/home/slavikovics-laptop/Desktop/AccessControl/Lab3.2-NaiveVersion/bin/Debug/net10.0/NaiveVersion)
 == a) create -- confidential + public records ==
 Writing full to /home/slavikovics-laptop/Desktop/AccessControl/Lab3.2-Report/lab/code/dumps/1-after-create.dmp
 Complete
@@ -26,6 +26,6 @@ Complete
   PUBLIC-PLAINTEXT-MARKER-BXQ7391: 2
 
 NOTE: files under ./dumps are full process memory dumps -- they contain the
-live XOR-obfuscated "ciphertext" and, since ProvidedAlgorithm has no
+live XOR-obfuscated "ciphertext" and, since NaiveVersion has no
 auth, no session secrets; still, delete them after analysis, never
 commit or share them.
