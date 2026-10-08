@@ -33,7 +33,7 @@ send DELETE public/1 >/dev/null
 dotnet-dump collect -p $PID -o $OUT/3-delete.dmp
 
 rm cookies.txt
-echo "Marker counts (strings | grep -c):"
+echo "Marker counts (UTF-8 + UTF-16 strings):"
 for d in $OUT/*.dmp; do
-  echo "$d: CONFIDENTIAL=$(strings $d | grep -c CONFIDENTIAL-MARKER) PUBLIC=$(strings $d | grep -c PUBLIC-MARKER)"
+  echo "$d: CONFIDENTIAL=$({ strings $d; strings -e l $d; } | grep -c CONFIDENTIAL-MARKER) PUBLIC=$({ strings $d; strings -e l $d; } | grep -c PUBLIC-MARKER)"
 done

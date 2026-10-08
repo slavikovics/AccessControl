@@ -1,0 +1,12 @@
+== Concurrency: 200 POSTs, 50 at a time ==
+own: unique ids 200 / 200, stored 200 / 200, GET list -> HTTP 200
+naive: unique ids 200 / 200, stored 0 / 200, GET list -> HTTP 500
+== Invalid input: HTTP status ==
+case                         own    naive
+wrong types                  400    500
+broken JSON                  400    500
+missing field                400    500
+empty body                   400    500
+10050 chars                  400    201
+5 MB                         400    201
+newline, tab                 201    201

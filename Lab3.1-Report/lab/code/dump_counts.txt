@@ -1,0 +1,8 @@
+Marker counts (UTF-8 + UTF-16 strings):
+./dumps/1-create.dmp: CONFIDENTIAL=5 PUBLIC=4
+./dumps/2-update.dmp: CONFIDENTIAL=10 PUBLIC=8
+./dumps/3-delete.dmp: CONFIDENTIAL=8 PUBLIC=6
+3254fa0 {"id":1,"title":"secret","content":"CONFIDENTIAL-MARKER-2","cr
+32560a6 {"id":1,"title":"secret","content":"CONFIDENTIAL-MARKER-2","cr
+325616d {"title":"secret","content":"CONFIDENTIAL-MARKER-2"}
+32595cc {"title":"secret","content":"CONFIDENTIAL-MARKER-1"}
