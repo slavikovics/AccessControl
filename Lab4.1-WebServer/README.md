@@ -20,6 +20,10 @@ attempts) over several days for `Lab4.1-Report`'s analysis.
   new `dist/` + `Caddyfile` to an already-provisioned server, then reloads
   Caddy (no downtime, no re-running `install.sh`).
 
+- `analysis/analyze.sh ssh|web|ossec` — short grep/awk/jq summary of the SSH,
+  Caddy and OSSEC logs; run on the server as root:
+  `ssh root@host 'bash -s ssh' < analysis/analyze.sh`.
+
 ## First deploy
 
 1. Point a domain's A/AAAA record at the server's public IP (Let's Encrypt

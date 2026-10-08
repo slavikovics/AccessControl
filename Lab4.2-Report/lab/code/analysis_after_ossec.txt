@@ -1,206 +1,35 @@
-Log analysis  window: 2026-09-05T19:16 .. now   generated 2026-09-20 21:21
-======================================================================
-SSH  (/var/log/auth.log*)
-======================================================================
-Period covered by data: 2026-09-05 .. 2026-09-20
-Failed authentication attempts: 21108   (by method: {'password': 21080, 'none': 28})
-'Invalid user' events (unknown login name): 8057
-Connections dropped before authentication ([preauth]): 16919
-Unique source IPs with failed attempts: 353
-Successful logins: 25
+Alerts: 150078
 
-Failed attempts per day:
-  2026-09-05  224
-  2026-09-06  1297
-  2026-09-07  1611
-  2026-09-08  1297
-  2026-09-09  1173
-  2026-09-10  1738
-  2026-09-11  1663
-  2026-09-12  1164
-  2026-09-13  1540
-  2026-09-14  1459
-  2026-09-15  1312
-  2026-09-16  1378
-  2026-09-17  1115
-  2026-09-18  1057
-  2026-09-19  1157
-  2026-09-20  1923
+Alerts by level:
+   3197 2
+    139 3
+    348 4
+ 138791 5
+    399 7
+     54 8
+   6665 10
+    485 13
 
-Failed attempts by hour of day (UTC/server time):
-  00:905 01:861 02:806 03:776 04:899 05:963 06:913 07:873 08:822 09:829 10:746 11:901 12:902 13:878 14:916 15:867 16:857 17:978 18:733 19:1013 20:869 21:850 22:1061 23:890
+Top 8 rules:
+  65364 5710 (level 5) -> 'Attempt to login using a non-existent user'
+  48443 5503 (level 5) -> 'User login failed.'
+  24879 5716 (level 5) -> 'SSHD authentication failed.'
+   4743 2502 (level 10) -> 'User missed the password more than one time'
+   3177 1002 (level 2) -> 'Unknown problem somewhere in the system.'
+   1331 5712 (level 10) -> 'SSHD brute force trying to get access to the system.'
+    485 1003 (level 13) -> 'Non standard syslog message (size too large).'
+    457 5551 (level 10) -> 'Multiple failed logins in a small period of time.'
 
-Top 10 source IPs (failed attempts):
-     1867  103.97.215.11
-     1285  2.57.121.112
-     1044  2.57.121.25
-      768  193.46.255.86
-      666  202.165.25.8
-      578  103.54.100.252
-      462  45.148.10.152
-      455  45.148.10.141
-      435  193.47.62.69
-      423  45.148.10.157
+Bans (firewall-drop add): 4745, unique IPs: 290
 
-Top 10 attacked user names:
-    10871  root
-     2429  admin
-      362  user
-      232  test
-      222  ubuntu
-      219  administrator
-      179  debian
-      112  postgres
-      109  oracle
-      104  deploy
-
-Top 10 /24 (IPv4) or /48 (IPv6) networks:
-     2992  109.160.32.0/24
-     2329  2.57.121.0/24
-     1982  45.148.10.0/24
-     1867  103.97.215.0/24
-     1152  2.57.122.0/24
-     1043  92.118.39.0/24
-      952  62.60.130.0/24
-      850  80.94.92.0/24
-      812  195.178.110.0/24
-      770  77.239.124.0/24
-
-Attempts against 'root': 10871  (51.5% of all failed attempts)
-
-Successful logins by (method, user, source IP) -- verify each is you:
-       23  publickey  root       10.0.0.4
-        2  password   devv       10.0.0.4
-
-IPs seen in the successful-login list AND the failed list (possible compromise or typo):
-
-======================================================================
-CADDY  (/var/log/caddy/access*.log*)
-======================================================================
-Total requests: 1642   response bytes: 1827209
-First request in window: ('2026-09-05T19:18:55.940066Z', '212.192.9.89', 'GET', '/', 'curl/8.5.0')
-Unique client IPs: 130
-Successful loads of the test page ('/' -> 200): 109
-Requests answered 404: 1318 (80.3%)
-
-Status codes: {200: 160, 304: 16, 308: 98, 404: 1318, 405: 50}
-Methods: {'GET': 1581, 'HEAD': 4, 'POST': 57}
-
-Requests per day:
-  2026-09-05  113
-  2026-09-06  71
-  2026-09-07  421
-  2026-09-08  20
-  2026-09-09  322
-  2026-09-10  293
-  2026-09-11  6
-  2026-09-12  12
-  2026-09-13  8
-  2026-09-14  294
-  2026-09-15  33
-  2026-09-16  9
-  2026-09-17  4
-  2026-09-18  3
-  2026-09-19  26
-  2026-09-20  7
-
-Top 10 client IPs:
-      277  34.85.4.70
-      277  34.81.62.102
-      277  34.80.253.162
-      277  34.81.190.215
-       48  146.70.134.142
-       41  195.178.110.223
-       31  91.148.244.131
-       22  130.12.180.117
-       20  136.118.216.31
-       20  8.228.96.124
-
-Top 10 User-Agents:
-      881  Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chr
-      295  Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/13
-       64  Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gec
-       48  Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/12
-       40  Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89
-       31  Go-http-client/1.1
-       26  Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/14
-       22  Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko, Yok
-       16  Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Sa
-       16  Mozilla/5.0 (Macintosh; Intel Mac OS X 15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome
-
-Top 10 not-found paths (scanner fingerprints):
-       17  /robots.txt
-       12  /.env
-       12  /.git/config
-        7  /favicon.ico
-        7  /phpinfo.php
-        6  /.env.backup
-        6  /.env.save
-        6  /.env.prod
-        6  /app/.env
-        6  /backend/.env
-
-Top hosts requested (Host header; IP-only hits = scanners not using the domain):
-     1631  test-lab4.work.gd
-       11  test-lab4.work.gd:80
-
-======================================================================
-OSSEC
-======================================================================
-Alerts in window: 55316   by level: {2: 1586, 3: 133, 4: 197, 5: 49667, 7: 132, 8: 33, 10: 3204, 13: 364}
-
-Alerts per day:
-  2026-09-05  556
-  2026-09-06  2925
-  2026-09-07  3652
-  2026-09-08  2899
-  2026-09-09  2952
-  2026-09-10  4126
-  2026-09-11  3979
-  2026-09-12  2891
-  2026-09-13  3785
-  2026-09-14  3389
-  2026-09-15  3012
-  2026-09-16  3061
-  2026-09-17  2560
-  2026-09-18  2522
-  2026-09-19  2787
-  2026-09-20  10220
-
-Top 10 rules:
-    20435  rule 5710 lvl 5  Attempt to login using a non-existent user
-    18509  rule 5503 lvl 5  User login failed.
-    10674  rule 5716 lvl 5  SSHD authentication failed.
-     2325  rule 2502 lvl 10  User missed the password more than one time
-     1576  rule 1002 lvl 2  Unknown problem somewhere in the system.
-      555  rule 5712 lvl 10  SSHD brute force trying to get access to the system.
-      364  rule 1003 lvl 13  Non standard syslog message (size too large).
-      230  rule 5551 lvl 10  Multiple failed logins in a small period of time.
-      188  rule 5740 lvl 4  ssh connection reset by peer
-       94  rule 5720 lvl 10  Multiple SSHD authentication failures.
-
-Top 10 alert source IPs:
-     4600  103.97.215.11
-     2393  2.57.121.112
-     1845  2.57.121.25
-     1481  103.54.100.252
-     1337  202.165.25.8
-     1334  193.46.255.86
-     1208  193.187.110.213
-     1107  80.94.92.234
-      947  92.118.39.77
-      936  2.57.122.238
-
-Active-response block events (one per ban, host-deny + firewall-drop counted once): 2103 against 133 unique IPs; unblocks (ban expired): 2099
-IPs banned more than once (returned after the 600 s ban expired): 83 of 133
-Top 10 most-banned IPs:
-      188  45.148.10.152  first ban: Sun Sep  6 00:05:45
-      180  45.148.10.141  first ban: Sat Sep  5 22:12:16
-      179  193.47.62.69  first ban: Sat Sep  5 22:56:51
-      177  45.148.10.151  first ban: Sat Sep  5 22:32:07
-      172  45.148.10.157  first ban: Sat Sep  5 22:06:48
-      154  62.60.130.253  first ban: Sat Sep  5 23:21:20
-      147  62.60.130.242  first ban: Sat Sep  5 22:42:08
-       92  62.60.130.201  first ban: Sat Sep  5 23:06:39
-       56  193.46.255.86  first ban: Sat Sep  5 19:44:34
-       24  109.160.32.63  first ban: Fri Sep 11 18:33:04
+Most banned IPs:
+    404 45.148.10.152
+    382 45.148.10.157
+    379 45.148.10.151
+    375 193.47.62.69
+    372 45.148.10.141
+    351 62.60.130.242
+    338 62.60.130.253
+    251 62.60.130.201
+    125 193.46.255.86
+     41 109.160.32.40

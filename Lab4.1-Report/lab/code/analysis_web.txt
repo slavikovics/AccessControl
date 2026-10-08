@@ -1,0 +1,39 @@
+Requests: 3539   unique IPs: 217
+
+Status codes:
+   2930 404
+    284 200
+    228 308
+     74 405
+     23 304
+
+Top 10 client IPs:
+    277 35.215.236.50
+    277 34.87.64.148
+    277 34.85.46.13
+    277 34.85.4.70
+    277 34.81.62.102
+    277 34.81.190.215
+    277 34.80.253.162
+    277 34.67.111.71
+    263 136.65.161.239
+    120 45.138.12.24
+
+Top 10 paths answered 404:
+     30 /robots.txt
+     29 /.git/config
+     23 /.env
+     15 /.env.production
+     14 /phpinfo.php
+     14 /info.php
+     13 /backend/.env
+     13 /app/.env
+     13 /api/session/properties
+     13 /api/.env
+
+Top 5 User-Agents:
+   1199 Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like 
+    856 Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/13
+    767 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)
+    122 Mozilla/5.0 (l9scan/2.0.9383e293e2239313e2231323; +https://leakix.net)
+    120 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
