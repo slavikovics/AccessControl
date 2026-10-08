@@ -12,7 +12,7 @@ var nextPubId = 0;
 var listener = new HttpListener();
 listener.Prefixes.Add("http://localhost:5090/");
 listener.Start();
-Console.WriteLine("Provided algorithm listening on http://localhost:5090/");
+Console.WriteLine("Naive version listening on http://localhost:5090/");
 
 while (true)
 {

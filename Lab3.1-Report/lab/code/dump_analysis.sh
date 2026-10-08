@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Usage: PID=<pid of SecureApp.Api> ./dump_analysis.sh
+# Usage: ./dump_analysis.sh (the SecureApp.Api process is found automatically)
 # Creates records, updates, deletes them and takes a memory dump after each step.
 # Run on a freshly started app: record ids are assumed to be 1.
 # Open the dumps in a hex viewer and search for the markers.
@@ -7,6 +7,8 @@ set -e
 BASE=${BASE:-http://localhost:5080}
 OUT=${OUT:-./dumps}
 mkdir -p "$OUT"
+PID=${PID:-$(pgrep -f '^dotnet .*SecureApp.Api.dll' | head -1)}
+[ -n "$PID" ] || { echo "SecureApp.Api is not running"; exit 1; }
 
 curl -s -X POST $BASE/api/auth/register -H 'Content-Type: application/json' \
   -d '{"username":"dumpuser","password":"DumpUserPass123"}' >/dev/null || true

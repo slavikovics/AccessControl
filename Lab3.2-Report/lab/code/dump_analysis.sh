@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
-# Usage: PID=<pid of NaiveVersion> ./dump_analysis.sh
+# Usage: ./dump_analysis.sh (the NaiveVersion process is found automatically)
 # Same steps as in Lab 3.1, but against the naive version (no auth, no public update/delete).
 # Run on a freshly started app: record ids are assumed to be 0.
 set -e
 BASE=${BASE:-http://localhost:5090}
 OUT=${OUT:-./dumps}
 mkdir -p "$OUT"
+PID=${PID:-$(pgrep -f 'bin/[Dd]ebug/net10.0/NaiveVersion$' | head -1)}
+[ -n "$PID" ] || { echo "NaiveVersion is not running"; exit 1; }
 
 send() { curl -s -X "$1" "$BASE/$2" -H 'Content-Type: application/json' -d "$3"; }
 
