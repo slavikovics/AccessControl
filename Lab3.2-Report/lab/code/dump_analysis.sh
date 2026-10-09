@@ -6,7 +6,7 @@ set -e
 BASE=${BASE:-http://localhost:5090}
 OUT=${OUT:-./dumps}
 mkdir -p "$OUT"
-PID=${PID:-$(pgrep -f 'bin/[Dd]ebug/net10.0/NaiveVersion$' | head -1)}
+PID=${PID:-$(pgrep -x NaiveVersion | head -1)}
 [ -n "$PID" ] || { echo "NaiveVersion is not running"; exit 1; }
 
 send() { curl -s -X "$1" "$BASE/$2" -H 'Content-Type: application/json' -d "$3"; }
@@ -24,7 +24,8 @@ echo "3. delete"
 send DELETE confidential/0 >/dev/null
 dotnet-dump collect -p $PID -o $OUT/3-delete.dmp
 
-echo "Marker counts (UTF-8 + UTF-16 strings):"
+count() { echo "$(strings $2 | grep -o $1 | wc -l) / $(strings -e l $2 | grep -o $1 | wc -l)"; }
+echo "Marker counts, UTF-8 / UTF-16:"
 for d in $OUT/*.dmp; do
-  echo "$d: CONFIDENTIAL=$({ strings $d; strings -e l $d; } | grep -c CONFIDENTIAL-MARKER) PUBLIC=$({ strings $d; strings -e l $d; } | grep -c PUBLIC-MARKER)"
+  echo "$d: CONFIDENTIAL=$(count CONFIDENTIAL-MARKER $d)  PUBLIC=$(count PUBLIC-MARKER $d)"
 done

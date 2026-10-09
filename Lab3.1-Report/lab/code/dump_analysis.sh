@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
-# Usage: ./dump_analysis.sh (the SecureApp.Api process is found automatically)
-# Creates records, updates, deletes them and takes a memory dump after each step.
-# Run on a freshly started app: record ids are assumed to be 1.
-# Open the dumps in a hex viewer and search for the markers.
 set -e
 BASE=${BASE:-http://localhost:5080}
 OUT=${OUT:-./dumps}
 mkdir -p "$OUT"
-PID=${PID:-$(pgrep -f '^dotnet .*SecureApp.Api.dll' | head -1)}
+PID=${PID:-$(pgrep -x SecureApp.Api | head -1)}
 [ -n "$PID" ] || { echo "SecureApp.Api is not running"; exit 1; }
 
 curl -s -X POST $BASE/api/auth/register -H 'Content-Type: application/json' \
@@ -33,7 +29,8 @@ send DELETE public/1 >/dev/null
 dotnet-dump collect -p $PID -o $OUT/3-delete.dmp
 
 rm cookies.txt
-echo "Marker counts (UTF-8 + UTF-16 strings):"
+count() { echo "$(strings $2 | grep -o $1 | wc -l) / $(strings -e l $2 | grep -o $1 | wc -l)"; }
+echo "Marker counts, UTF-8 / UTF-16:"
 for d in $OUT/*.dmp; do
-  echo "$d: CONFIDENTIAL=$({ strings $d; strings -e l $d; } | grep -c CONFIDENTIAL-MARKER) PUBLIC=$({ strings $d; strings -e l $d; } | grep -c PUBLIC-MARKER)"
+  echo "$d: CONFIDENTIAL=$(count CONFIDENTIAL-MARKER $d)  PUBLIC=$(count PUBLIC-MARKER $d)"
 done

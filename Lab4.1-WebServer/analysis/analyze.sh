@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# Usage (on the server, as root): ./analyze.sh ssh | web | ossec
-# Counts events in the logs that are still on the server (see the top of each section).
+# Usage: ssh root@212.192.9.89 'bash -s ssh' <  ./analyze.sh (ssh or web or ossec)
 top() { sort | uniq -c | sort -rn | head -${1:-10}; }
 
 ssh_report() {
